@@ -89,9 +89,11 @@ fun TrendChartView(
 
 @Composable
 private fun TrendLineChart(trends: List<WinRateTrend>) {
-    val lineColor = Color(0xFF0F4C81)
+    // 亮色系：鮮豔亮藍（深色背景上更醒目），對應 iOS Color.blue.gradient
+    val lineColor = Color(0xFF00A8FF)
+    val pointFillColor = Color(0xFF00A8FF)
+    val pointStrokeColor = Color.White
     val gridColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
-    val labelColor = MaterialTheme.colorScheme.onSurfaceVariant
 
     // 排序（依日期升冪）
     val sorted = trends.sortedBy { it.date }
@@ -145,14 +147,9 @@ private fun TrendLineChart(trends: List<WinRateTrend>) {
                 Offset(x, y)
             }
 
-            // 3. 折線（藍色）
+            // 3. 圓滑曲線（Catmull-Rom spline → cubic bezier，對應 iOS .catmullRom）
             if (points.size > 1) {
-                val path = Path().apply {
-                    moveTo(points.first().x, points.first().y)
-                    for (i in 1 until points.size) {
-                        lineTo(points[i].x, points[i].y)
-                    }
-                }
+                val path = buildSmoothPath(points)
                 drawPath(
                     path = path,
                     color = lineColor,
@@ -164,9 +161,10 @@ private fun TrendLineChart(trends: List<WinRateTrend>) {
                 )
             }
 
-            // 4. 資料點（藍色圓點）
+            // 4. 資料點（亮藍填充 + 白描邊，更醒目）
             points.forEach { p ->
-                drawCircle(color = lineColor, radius = 7f, center = p)
+                drawCircle(color = pointStrokeColor, radius = 8f, center = p)
+                drawCircle(color = pointFillColor, radius = 5f, center = p)
             }
 
             // 5. X 軸日期標籤（最多 5 個）
@@ -192,4 +190,37 @@ private fun TrendLineChart(trends: List<WinRateTrend>) {
             }
         }
     }
+}
+
+/**
+ * 用 Catmull-Rom spline 轉 cubic bezier 建立圓滑曲線。
+ * 對應 iOS Swift Charts 的 .interpolationMethod(.catmullRom)。
+ *
+ * 每個線段 Pi → Pi+1 的控制點：
+ *   c1 = Pi   + (Pi+1 - Pi-1) / 6
+ *   c2 = Pi+1 - (Pi+2 - Pi)   / 6
+ * 端點（首尾）用自身當作前後點，避免越界。
+ */
+private fun buildSmoothPath(points: List<Offset>): Path {
+    val path = Path()
+    val n = points.size
+    if (n < 2) return path
+
+    path.moveTo(points[0].x, points[0].y)
+
+    for (i in 0 until n - 1) {
+        val p0 = points[if (i - 1 < 0) 0 else i - 1]      // Pi-1
+        val p1 = points[i]                                  // Pi
+        val p2 = points[i + 1]                              // Pi+1
+        val p3 = points[if (i + 2 >= n) n - 1 else i + 2]  // Pi+2
+
+        val c1x = p1.x + (p2.x - p0.x) / 6f
+        val c1y = p1.y + (p2.y - p0.y) / 6f
+        val c2x = p2.x - (p3.x - p1.x) / 6f
+        val c2y = p2.y - (p3.y - p1.y) / 6f
+
+        path.cubicTo(c1x, c1y, c2x, c2y, p2.x, p2.y)
+    }
+
+    return path
 }
