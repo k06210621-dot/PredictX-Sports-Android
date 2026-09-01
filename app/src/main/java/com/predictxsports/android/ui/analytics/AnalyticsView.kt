@@ -48,7 +48,8 @@ import com.predictxsports.android.ui.theme.PredictXTextSize
 fun AnalyticsView(
     viewModel: AnalyticsViewModel = viewModel(),
     billingViewModel: BillingViewModel? = null,
-    onUpgradeClick: (() -> Unit)? = null
+    onUpgradeClick: (() -> Unit)? = null,
+    onSettlementClick: ((RecentSettlement) -> Unit)? = null
 ) {
     // 修正：原本 isPremium 永遠是 false（呼叫端沒傳），導致 STANDARD 訂閱者也被鎖。
     // 改為直接訂閱 BillingViewModel.tier。
@@ -62,6 +63,8 @@ fun AnalyticsView(
     val leagueAccuracies by viewModel.leagueAccuracies.collectAsState()
     val overallAccuracy by viewModel.overallAccuracy.collectAsState()
     val recentSettlements by viewModel.recentSettlements.collectAsState()
+    val winRateTrends by viewModel.winRateTrends.collectAsState()
+    val selectedLeague by viewModel.selectedLeague.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
     Column(
@@ -99,13 +102,23 @@ fun AnalyticsView(
                 } else {
                     // 2. 最近 10 場
                     item {
-                        RecentFormSection(settlements = recentSettlements)
+                        RecentFormSection(
+                            settlements = recentSettlements,
+                            onSettlementClick = onSettlementClick
+                        )
                     }
                     // 3. 聯賽選擇
                     item {
                         LeagueSelectionSection(
                             accuracies = leagueAccuracies,
                             onLeagueClick = { league -> viewModel.updateTrendForLeague(league) }
+                        )
+                    }
+                    // 4. 趨勢圖（對齊 iOS TrendChartSection）
+                    item {
+                        TrendChartView(
+                            league = selectedLeague,
+                            trends = winRateTrends
                         )
                     }
                 }
@@ -165,7 +178,10 @@ private fun LockedAnalyticsContent(onUpgradeClick: (() -> Unit)?) {
 }
 
 @Composable
-private fun RecentFormSection(settlements: List<RecentSettlement>) {
+private fun RecentFormSection(
+    settlements: List<RecentSettlement>,
+    onSettlementClick: ((RecentSettlement) -> Unit)? = null
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -177,7 +193,7 @@ private fun RecentFormSection(settlements: List<RecentSettlement>) {
             if (settlements.isEmpty()) {
                 Text("正在從已結算賽事載入驗證紀錄...", fontSize = PredictXTextSize.sm, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(vertical = 12.dp))
             } else {
-                // W/L 圓角方塊
+                // W/L 圓角方塊（可點擊 → 開啟 SettlementDetailView）
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     modifier = Modifier.padding(vertical = 4.dp)
@@ -187,7 +203,10 @@ private fun RecentFormSection(settlements: List<RecentSettlement>) {
                             modifier = Modifier
                                 .size(28.dp)
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(if (item.isHit) Color(0xFF1FBF73) else Color(0xFFD93B3B)),
+                                .background(if (item.isHit) Color(0xFF1FBF73) else Color(0xFFD93B3B))
+                                .then(
+                                    if (onSettlementClick != null) Modifier.clickable { onSettlementClick(item) } else Modifier
+                                ),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(if (item.isHit) "O" else "X", fontWeight = FontWeight.Black, color = MaterialTheme.colorScheme.onSurface, fontSize = PredictXTextSize.md)

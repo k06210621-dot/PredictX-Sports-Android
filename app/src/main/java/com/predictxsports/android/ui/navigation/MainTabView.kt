@@ -28,6 +28,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.predictxsports.android.ui.analytics.AnalyticsView
+import com.predictxsports.android.ui.analytics.AnalyticsViewModel
+import com.predictxsports.android.ui.analytics.SettlementDetailView
 import com.predictxsports.android.ui.history.HistoryView
 import com.predictxsports.android.ui.home.HomeView
 import com.predictxsports.android.ui.home.AIAnalysisDetailView
@@ -74,6 +76,7 @@ fun MainTabView(billingViewModel: BillingViewModel? = null) {
     val navController = rememberNavController()
     val screens = listOf(Screen.Home, Screen.Analytics, Screen.History, Screen.Profile)
     val homeViewModel: HomeViewModel = viewModel()
+    val analyticsViewModel: AnalyticsViewModel = viewModel()
     // Shared BillingViewModel instance (provided by MainActivity for shared prefs persistence)
     val effectiveBilling = billingViewModel ?: viewModel<BillingViewModel>().also {
         val context = LocalContext.current
@@ -178,8 +181,12 @@ fun MainTabView(billingViewModel: BillingViewModel? = null) {
             }
             composable(Screen.Analytics.route) {
                 AnalyticsView(
+                    viewModel = analyticsViewModel,
                     billingViewModel = effectiveBilling,
-                    onUpgradeClick = { navController.navigate(Screen.Subscribe.route) }
+                    onUpgradeClick = { navController.navigate(Screen.Subscribe.route) },
+                    onSettlementClick = { settlement ->
+                        navController.navigate(Screen.SettlementDetail.routeWithId(settlement.id))
+                    }
                 )
             }
             composable(Screen.History.route) { HistoryView() }
@@ -215,6 +222,23 @@ fun MainTabView(billingViewModel: BillingViewModel? = null) {
                 if (match != null) {
                     AIAnalysisDetailView(
                         match = match,
+                        onBack = { navController.popBackStack() }
+                    )
+                } else {
+                    LaunchedEffect(Unit) { navController.popBackStack() }
+                }
+            }
+            composable(
+                route = Screen.SettlementDetail.route,
+                arguments = listOf(
+                    androidx.navigation.navArgument("gameId") { type = NavType.StringType }
+                )
+            ) { backStackEntry ->
+                val gameId = backStackEntry.arguments?.getString("gameId") ?: ""
+                val settlement = analyticsViewModel.findSettlement(gameId)
+                if (settlement != null) {
+                    SettlementDetailView(
+                        settlement = settlement,
                         onBack = { navController.popBackStack() }
                     )
                 } else {
