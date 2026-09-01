@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "845814904152",
+    "project_id": "predictx-sports",
+    "storage_bucket": "predictx-sports.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:845814904152:android:c85b912cb47482947a612d",
+        "android_client_info": {
+          "package_name": "com.predictxsports.android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRVawG4gKCTalcRxQowOXyJ6tlDLvdMmw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

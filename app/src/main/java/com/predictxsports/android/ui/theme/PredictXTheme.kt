@@ -1,0 +1,161 @@
+package com.predictxsports.android.ui.theme
+
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Typography
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.predictxsports.android.data.model.LeagueType
+
+// ── 聯盟主題色 (iOS LeagueTheme.color(for:)) ──
+
+object LeagueTheme {
+    fun color(league: LeagueType): Color = when (league) {
+        LeagueType.MLB  -> Color(0.12f, 0.35f, 0.75f)
+        LeagueType.NBA  -> Color(0.85f, 0.40f, 0.05f)
+        LeagueType.WNBA -> Color(0.75f, 0.20f, 0.50f)
+        LeagueType.NPB  -> Color(0.85f, 0.65f, 0.13f)
+        LeagueType.CPBL -> Color(0.15f, 0.65f, 0.25f)
+    }
+
+    fun gradient(league: LeagueType): Brush {
+        val c = color(league)
+        return Brush.linearGradient(
+            colors = listOf(c, c.copy(alpha = 0.7f))
+        )
+    }
+
+    fun unselectedBg(league: LeagueType): Color = color(league).copy(alpha = 0.18f)
+    fun shadowColor(league: LeagueType): Color = color(league).copy(alpha = 0.25f)
+}
+
+// ── 深色運動色盤 (High contrast sports UI) ──
+
+object SportsColors {
+    val sportsBackground @Composable get() = MaterialTheme.colorScheme.background
+
+    val cardBackground @Composable get() = MaterialTheme.colorScheme.surface
+    val cardSecondaryBackground @Composable get() = MaterialTheme.colorScheme.surfaceVariant
+
+    val energyOrange @Composable get() = Color(0xFFFF6B35)
+    val energyCyan @Composable get() = Color(0xFF22D3EE)
+
+    val glassBackground @Composable get() = if (isSystemInDarkTheme()) Color(0x26FFFFFF) else Color(0x1A000000)
+    val glassBorder @Composable get() = if (isSystemInDarkTheme()) Color(0x3DFFFFFF) else Color(0x33000000)
+
+    val primaryText @Composable get() = MaterialTheme.colorScheme.onSurface
+    val secondaryText @Composable get() = MaterialTheme.colorScheme.onSurfaceVariant
+    val tertiaryText @Composable get() = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
+}
+
+// ── 深色運動背景 (iOS SportsDarkBackground) ──
+
+@Composable
+fun SportsDarkBackground(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    val isDark = isSystemInDarkTheme()
+    Surface(
+        modifier = modifier.fillMaxSize(),
+        color = if (isDark) Color(0xFF0F1220) else Color(0xFFF2F2F7)
+    ) {
+        content()
+    }
+}
+
+// ── Material3 Color Scheme ──
+
+private val DarkColors = darkColorScheme(
+    primary = Color(0xFF0F4C81),
+    secondary = Color(0xFFD4A843),
+    background = Color(0xFF0F1220),
+    surface = Color(0xFF1C1C1E),
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onBackground = Color(0xFFF2F2F7),
+    onSurface = Color(0xFFF2F2F7)
+)
+
+private val LightColors = lightColorScheme(
+    primary = Color(0xFF0F4C81),
+    primaryContainer = Color(0xFFD6E8FF),
+    onPrimaryContainer = Color(0xFF001D3A),
+    secondary = Color(0xFFD4A843),
+    secondaryContainer = Color(0xFFFFF3D6),
+    onSecondaryContainer = Color(0xFF3D2E00),
+    tertiary = Color(0xFF4CAF50),
+    background = Color(0xFFF2F2F7),
+    surface = Color(0xFFFFFFFF),
+    surfaceVariant = Color(0xFFEAEAEC),
+    onSurface = Color(0xFF1C1C1E),
+    onSurfaceVariant = Color(0xFF4A4A4C),
+    outline = Color(0xFFC6C6C8),
+    outlineVariant = Color(0xFFE3E3E3)
+)
+
+// ── 字型 (iOS FontStyle 對應) ──
+
+private val PredictXTypography = Typography(
+    displayLarge = TextStyle(fontSize = 48.sp, fontWeight = FontWeight.Bold, lineHeight = 56.sp),
+    headlineMedium = TextStyle(fontSize = 28.sp, fontWeight = FontWeight.SemiBold, lineHeight = 34.sp),
+    titleLarge = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.SemiBold, lineHeight = 28.sp),
+    bodyLarge = TextStyle(fontSize = 19.sp, fontWeight = FontWeight.Normal, lineHeight = 24.sp),
+    bodyMedium = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Normal, lineHeight = 22.sp),
+    labelLarge = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium, lineHeight = 18.sp)
+)
+
+/**
+ * PredictX 標準化字級 token (P0-2 優化)
+ * 統一全 App 的字體大小，避免 sp 散落 197 處無法維護
+ *
+ * 使用方式：
+ *   fontSize = PredictXTextSize.md      // 14.sp
+ *   fontSize = PredictXTextSize.xl      // 18.sp
+ *   或直接讀 sp 值：PredictXTextSize.md.value
+ */
+object PredictXTextSize {
+    val xs = 11.sp       // 圖標輔助文字
+    val sm = 12.sp       // 卡片副標題、時間戳
+    val base = 13.sp     // 內文小字、列表項
+    val md = 14.sp       // 內文
+    val lg = 15.sp       // 區塊內文強調
+    val xl = 16.sp       // 內容主文
+    val xxl = 18.sp      // 區塊標題（19.sp 併入）
+    val xxxl = 20.sp     // 卡片主標
+    val display = 22.sp  // TopAppBar、頁面大標
+    val hero = 28.sp     // 數字儀表板
+    val heroXl = 38.sp   // 信心度儀表板大數字
+    val heroLg = 40.sp   // 大數字（會員卡點數，42.sp 併入）
+    val displayLg = 48.sp // 顯示器級（如驗證率 %）
+}
+
+// ── 應用主題入口 ──
+
+@Composable
+fun PredictXTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    MaterialTheme(
+        colorScheme = if (darkTheme) DarkColors else LightColors,
+        typography = PredictXTypography,
+        shapes = androidx.compose.material3.Shapes(
+            small = RoundedCornerShape(12.dp),
+            medium = RoundedCornerShape(16.dp),
+            large = RoundedCornerShape(22.dp)
+        ),
+        content = content
+    )
+}

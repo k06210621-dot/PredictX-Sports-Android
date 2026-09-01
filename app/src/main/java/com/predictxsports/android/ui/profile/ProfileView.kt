@@ -71,6 +71,7 @@ import com.predictxsports.android.ui.navigation.Screen
 import com.predictxsports.android.ui.theme.ThemeController
 import com.predictxsports.android.ui.theme.ThemeRevealController
 import com.predictxsports.android.ui.theme.ThemeRevealOverlay
+import com.predictxsports.android.ui.theme.PredictXTextSize
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -115,7 +116,7 @@ fun ProfileView(
                         Text(
                             "個人資訊",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 22.sp,
+                            fontSize = PredictXTextSize.display,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                     }
@@ -181,7 +182,7 @@ fun ProfileView(
                                     favoriteMatchIds.isEmpty() -> "尚無收藏資料"
                                     else -> "${ favoriteMatchIds.size } 筆收藏 / 上限 50"
                                 },
-                                fontSize = 12.sp,
+                                fontSize = PredictXTextSize.sm,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
@@ -263,7 +264,7 @@ fun FavoritesListView(
                 Text(
                     "尚無收藏資料。請在智能分析內比賽卡片右上角點擊星星收藏。",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 13.sp
+                    fontSize = PredictXTextSize.base
                 )
             }
         } else {
@@ -311,7 +312,7 @@ private fun MembershipCardView(
             ) {
                 Column(Modifier.weight(1f)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(tier.rawValue, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                        Text(tier.rawValue, color = Color.White, fontWeight = FontWeight.Bold, fontSize = PredictXTextSize.xxxl)
                     }
                     Text(
                         when {
@@ -320,10 +321,10 @@ private fun MembershipCardView(
                             else -> "訂閱中・已解鎖所有權限"
                         },
                         color = Color.White.copy(alpha = 0.8f),
-                        fontSize = 12.sp
+                        fontSize = PredictXTextSize.sm
                     )
                     if (tier == MembershipTier.FREE && !trialExpired) {
-                        Text("每日 AI 分析點數補滿 60 點", color = Color.White.copy(alpha = 0.7f), fontSize = 13.sp)
+                        Text("每日 AI 分析點數補滿 60 點", color = Color.White.copy(alpha = 0.7f), fontSize = PredictXTextSize.base)
                     }
                 }
                 Box(
@@ -340,9 +341,9 @@ private fun MembershipCardView(
                                 MembershipTier.BASIC -> if (diamonds >= 99999) "∞" else "$diamonds"
                                 MembershipTier.STANDARD -> "∞"
                             },
-                            color = Color.White, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp
+                            color = Color.White, fontWeight = FontWeight.ExtraBold, fontSize = PredictXTextSize.heroLg
                         )
-                        Text("分析點數", color = Color.White.copy(alpha = 0.8f), fontSize = 13.sp)
+                        Text("分析點數", color = Color.White.copy(alpha = 0.8f), fontSize = PredictXTextSize.base)
                     }
                 }
             }
@@ -421,7 +422,7 @@ private fun AiQuotaCard(
                 Text("AI 使用額度", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
                 Text(
                     subtitle,
-                    fontSize = 12.sp,
+                    fontSize = PredictXTextSize.sm,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -490,7 +491,7 @@ private fun ProfileMenuRow(
         Spacer(Modifier.width(16.dp))
         Column(Modifier.weight(1f)) {
             Text(title, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
-            Text(subtitle, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(subtitle, fontSize = PredictXTextSize.sm, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         action?.invoke()
     }
