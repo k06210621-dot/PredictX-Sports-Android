@@ -41,6 +41,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import com.predictxsports.android.ui.theme.PredictXTextSize
+import androidx.compose.foundation.layout.widthIn
 
 @Composable
 fun PredictionRowView(
@@ -241,7 +242,10 @@ fun CompactPredictionRowView(
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Left: league + date + confidence
-        Column(verticalArrangement = Arrangement.spacedBy(2.dp), modifier = Modifier.width(48.dp)) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+            modifier = Modifier.widthIn(min = 72.dp)
+        ) {
             Text(match.league.rawValue, fontSize = PredictXTextSize.sm, fontWeight = FontWeight.Bold, color = themeColor)
             val dateFmt = SimpleDateFormat("MM/dd", Locale.TAIWAN)
             Text(dateFmt.format(Date(match.startTime)), fontSize = PredictXTextSize.sm, color = MaterialTheme.colorScheme.onSurfaceVariant)
