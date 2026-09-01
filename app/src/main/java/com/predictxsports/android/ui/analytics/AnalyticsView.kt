@@ -32,6 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
+import com.predictxsports.android.service.BillingViewModel
+import com.predictxsports.android.service.MembershipTier
 import com.predictxsports.android.ui.components.AnalysisSkeletonView
 import com.predictxsports.android.ui.theme.LeagueTheme
 import androidx.compose.material3.MaterialTheme
@@ -45,9 +47,17 @@ import com.predictxsports.android.ui.theme.PredictXTextSize
 @Composable
 fun AnalyticsView(
     viewModel: AnalyticsViewModel = viewModel(),
-    isPremium: Boolean = false,  // 對應 iOS subscriptionManager.tier
+    billingViewModel: BillingViewModel? = null,
     onUpgradeClick: (() -> Unit)? = null
 ) {
+    // 修正：原本 isPremium 永遠是 false（呼叫端沒傳），導致 STANDARD 訂閱者也被鎖。
+    // 改為直接訂閱 BillingViewModel.tier。
+    // 對齊 iOS AnalyticsView.swift:44 的「負面清單」語意：
+    //   只有 free 或 basic 才鎖，standard（及未來 premium）都解鎖。
+    val effectiveBilling = billingViewModel ?: viewModel<BillingViewModel>()
+    val tier by effectiveBilling.tier.collectAsState()
+    val isLocked = tier == MembershipTier.FREE || tier == MembershipTier.BASIC
+
     val isLoading by viewModel.isLoading.collectAsState()
     val leagueAccuracies by viewModel.leagueAccuracies.collectAsState()
     val overallAccuracy by viewModel.overallAccuracy.collectAsState()
@@ -83,8 +93,8 @@ fun AnalyticsView(
                     OverallAccuracyCard(accuracy = overallAccuracy)
                 }
 
-                // Free/Basic 鎖定
-                if (!isPremium) {
+                // Free/Basic 鎖定（對齊 iOS：只有 free/basic 鎖，standard/premium 解鎖）
+                if (isLocked) {
                     item { LockedAnalyticsContent(onUpgradeClick = onUpgradeClick) }
                 } else {
                     // 2. 最近 10 場
