@@ -32,6 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
+import com.predictxsports.android.service.BillingViewModel
+import com.predictxsports.android.service.MembershipTier
 import com.predictxsports.android.ui.components.AnalysisSkeletonView
 import com.predictxsports.android.ui.theme.LeagueTheme
 import androidx.compose.material3.MaterialTheme
@@ -45,9 +47,15 @@ import com.predictxsports.android.ui.theme.PredictXTextSize
 @Composable
 fun AnalyticsView(
     viewModel: AnalyticsViewModel = viewModel(),
-    isPremium: Boolean = false,  // 對應 iOS subscriptionManager.tier
+    billingViewModel: BillingViewModel? = null,
     onUpgradeClick: (() -> Unit)? = null
 ) {
+    // 修正：原本 isPremium 永遠是 false（呼叫端沒傳），導致 STANDARD 訂閱者也被鎖。
+    // 改為直接訂閱 BillingViewModel.tier，當 tier == STANDARD 時解鎖完整內容。
+    val effectiveBilling = billingViewModel ?: viewModel<BillingViewModel>()
+    val tier by effectiveBilling.tier.collectAsState()
+    val isPremium = tier == MembershipTier.STANDARD
+
     val isLoading by viewModel.isLoading.collectAsState()
     val leagueAccuracies by viewModel.leagueAccuracies.collectAsState()
     val overallAccuracy by viewModel.overallAccuracy.collectAsState()

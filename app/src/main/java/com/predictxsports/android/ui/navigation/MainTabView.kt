@@ -177,7 +177,10 @@ fun MainTabView(billingViewModel: BillingViewModel? = null) {
                 )
             }
             composable(Screen.Analytics.route) {
-                AnalyticsView(onUpgradeClick = { navController.navigate(Screen.Subscribe.route) })
+                AnalyticsView(
+                    billingViewModel = effectiveBilling,
+                    onUpgradeClick = { navController.navigate(Screen.Subscribe.route) }
+                )
             }
             composable(Screen.History.route) { HistoryView() }
             composable(Screen.Profile.route) {
