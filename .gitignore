@@ -1,0 +1,24 @@
+# PredictX Sports Android — Gradle / IDE / Build artifacts
+
+# ──── Build outputs ────
+/build
+/app/build
+/.gradle
+/local.properties
+
+# ──── Signing keystore (敏感檔案，絕對不要 commit) ────
+*.keystore
+*.jks
+keystore.properties
+
+# ──── IDE ────
+.idea/
+*.iml
+.vscode/
+
+# ──── OS ────
+.DS_Store
+Thumbs.db
+
+# ──── Logs ────
+*.log
