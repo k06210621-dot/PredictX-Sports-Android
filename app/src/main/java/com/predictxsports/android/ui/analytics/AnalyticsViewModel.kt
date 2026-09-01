@@ -163,6 +163,10 @@ class AnalyticsViewModel : ViewModel() {
             return hits.toDouble() / list.size
         }
 
+    /** 依 gameId 查詢單筆 settlement（供 SettlementDetailView 使用） */
+    fun findSettlement(gameId: String): RecentSettlement? =
+        _recentSettlements.value.firstOrNull { it.id == gameId }
+
     // ── 輔助方法 ──
 
     private fun parseDate(dateString: String): Long? {

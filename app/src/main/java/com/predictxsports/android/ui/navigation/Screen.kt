@@ -23,4 +23,7 @@ sealed class Screen(
     object AIAnalysisDetail : Screen("ai_detail/{matchId}", "AI 分析詳情", Icons.Filled.Memory) {
         fun routeWithId(matchId: String) = "ai_detail/$matchId"
     }
+    object SettlementDetail : Screen("settlement_detail/{gameId}", "賽事驗證詳情", Icons.Filled.Memory) {
+        fun routeWithId(gameId: String) = "settlement_detail/$gameId"
+    }
 }
