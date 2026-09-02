@@ -207,7 +207,9 @@ class BillingViewModel : ViewModel() {
             loadFromPrefsSync()
             // Trial must start BEFORE querying existing purchases,
             // so async callback reads correct FREE tier default state
-            if (_trialStartDate.value == null) startTrial()
+            // 修復：只在 FREE 且無 trial_start 時才 startTrial，
+            // 避免 STANDARD/BASIC 訂閱者被 startTrial 覆寫回 FREE
+            if (_trialStartDate.value == null && _tier.value == MembershipTier.FREE) startTrial()
             // Check on every app launch / resume (fixes daily reset issue)
             checkDailyReset()
             // Then background full load (handles favorites JSON parsing)
@@ -217,7 +219,7 @@ class BillingViewModel : ViewModel() {
             setupBillingClient(context)
         } else {
             // Already initialized (e.g. activity recreate)
-            if (_trialStartDate.value == null) startTrial()
+            if (_trialStartDate.value == null && _tier.value == MembershipTier.FREE) startTrial()
             checkDailyReset()
         }
     }
