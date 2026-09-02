@@ -13,7 +13,7 @@ android {
         applicationId = "com.predictxsports.android"
         minSdk = 26
         targetSdk = 36
-        versionCode = 9
+        versionCode = 10
         versionName = "1.0.0"
     }
 

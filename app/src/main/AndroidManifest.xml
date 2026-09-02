@@ -6,6 +6,8 @@
     <application
         android:name=".PredictXApplication"
         android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher"
         android:label="PredictX Sports"
         android:supportsRtl="true"
         android:theme="@style/Theme.PredictX">
