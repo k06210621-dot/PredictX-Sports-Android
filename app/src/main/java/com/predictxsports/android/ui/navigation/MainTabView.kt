@@ -196,7 +196,8 @@ fun MainTabView(billingViewModel: BillingViewModel? = null) {
             composable(Screen.Subscribe.route) {
                 SubscribeView(
                     billingViewModel = effectiveBilling,
-                    onClose = { navController.popBackStack() }
+                    onClose = { navController.popBackStack() },
+                    onRestore = { effectiveBilling.restorePurchases() }
                 )
             }
             composable(Screen.AiInfo.route) {
