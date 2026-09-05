@@ -1,6 +1,7 @@
 package com.predictxsports.android.ui.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -145,7 +147,13 @@ fun ProfileView(
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
 
-            MembershipCardView(tier, diamonds, trialExpired, trialDaysRemaining)
+            MembershipCardView(
+                tier = tier,
+                diamonds = diamonds,
+                trialExpired = trialExpired,
+                trialDaysRemaining = trialDaysRemaining,
+                onUpgradeClick = { navController?.navigate(Screen.Subscribe.route) }
+            )
 
             Box(modifier = Modifier.clickable { navController?.navigate(Screen.Subscribe.route) }) {
                 ProfileMenuRow(
@@ -289,15 +297,24 @@ private fun MembershipCardView(
     tier: MembershipTier,
     diamonds: Int,
     trialExpired: Boolean,
-    trialDaysRemaining: Int
+    trialDaysRemaining: Int,
+    onUpgradeClick: () -> Unit = {}
 ) {
+    // 🆕 P0 優化：FREE 卡片改為紫色發光漸層（強化 CTA 視覺）
     val colors = when (tier) {
         MembershipTier.STANDARD -> listOf(Color(0xFF3366CC), Color(0xFF4D80E6))
         MembershipTier.BASIC -> listOf(Color(0xFF4CAF50), Color(0xFF66BB6A))
-        MembershipTier.FREE -> listOf(Color(0xFF404060), Color(0xFF595973))
+        MembershipTier.FREE -> listOf(Color(0xFF4C1D95), Color(0xFF7C3AED), Color(0xFFA78BFA))
     }
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(
+                if (tier == MembershipTier.FREE) Modifier.border(
+                    BorderStroke(2.dp, Color(0xFFA78BFA)),
+                    RoundedCornerShape(16.dp)
+                ) else Modifier
+            ),
         shape = RoundedCornerShape(16.dp)
     ) {
         Box(
@@ -306,44 +323,68 @@ private fun MembershipCardView(
                 .background(Brush.horizontalGradient(colors), RoundedCornerShape(16.dp))
                 .padding(16.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(Modifier.weight(1f)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(tier.rawValue, color = Color.White, fontWeight = FontWeight.Bold, fontSize = PredictXTextSize.xxxl)
+            Column {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(Modifier.weight(1f)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            if (tier == MembershipTier.FREE && !trialExpired) {
+                                Text("✨ ", fontSize = PredictXTextSize.xxxl)
+                            }
+                            Text(tier.rawValue, color = Color.White, fontWeight = FontWeight.Bold, fontSize = PredictXTextSize.xxxl)
+                        }
+                        Text(
+                            when {
+                                tier == MembershipTier.FREE && trialExpired -> "試用已過期・請升級方案"
+                                tier == MembershipTier.FREE -> "試用期剩餘 $trialDaysRemaining 天"
+                                else -> "訂閱中・已解鎖所有權限"
+                            },
+                            color = Color.White.copy(alpha = 0.9f),
+                            fontSize = PredictXTextSize.sm
+                        )
+                        if (tier == MembershipTier.FREE && !trialExpired) {
+                            Text("每日 AI 分析點數補滿 60 點", color = Color.White.copy(alpha = 0.8f), fontSize = PredictXTextSize.base)
+                        }
                     }
-                    Text(
-                        when {
-                            tier == MembershipTier.FREE && trialExpired -> "試用已過期・請升級方案"
-                            tier == MembershipTier.FREE -> "試用期剩餘 $trialDaysRemaining 天"
-                            else -> "訂閱中・已解鎖所有權限"
-                        },
-                        color = Color.White.copy(alpha = 0.8f),
-                        fontSize = PredictXTextSize.sm
-                    )
-                    if (tier == MembershipTier.FREE && !trialExpired) {
-                        Text("每日 AI 分析點數補滿 60 點", color = Color.White.copy(alpha = 0.7f), fontSize = PredictXTextSize.base)
+                    Box(
+                        modifier = Modifier
+                            .background(Color.White.copy(alpha = 0.15f), RoundedCornerShape(16.dp))
+                            .padding(horizontal = 20.dp, vertical = 12.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                when (tier) {
+                                    MembershipTier.FREE -> "$diamonds"
+                                    MembershipTier.BASIC -> if (diamonds >= 99999) "∞" else "$diamonds"
+                                    MembershipTier.STANDARD -> "∞"
+                                },
+                                color = Color.White, fontWeight = FontWeight.ExtraBold, fontSize = PredictXTextSize.heroLg
+                            )
+                            Text("分析點數", color = Color.White.copy(alpha = 0.8f), fontSize = PredictXTextSize.base)
+                        }
                     }
                 }
-                Box(
-                    modifier = Modifier
-                        .background(Color.White.copy(alpha = 0.15f), RoundedCornerShape(16.dp))
-                        .padding(horizontal = 20.dp, vertical = 12.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+                // 🆕 P0 優化：FREE 狀態顯示「立即升級」CTA（iOS 對齊）
+                if (tier == MembershipTier.FREE) {
+                    Spacer(Modifier.height(14.dp))
+                    androidx.compose.material3.Button(
+                        onClick = onUpgradeClick,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFF97316)
+                        ),
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
                         Text(
-                            // 2026-08-26 fix: 格式化顯示，避免 BASIC 方案顯示 Int.MAX_VALUE (2147483647)
-                            when (tier) {
-                                MembershipTier.FREE -> "$diamonds"
-                                MembershipTier.BASIC -> if (diamonds >= 99999) "∞" else "$diamonds"
-                                MembershipTier.STANDARD -> "∞"
-                            },
-                            color = Color.White, fontWeight = FontWeight.ExtraBold, fontSize = PredictXTextSize.heroLg
+                            "立即升級 · 解鎖無限分析  →",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = PredictXTextSize.lg
                         )
-                        Text("分析點數", color = Color.White.copy(alpha = 0.8f), fontSize = PredictXTextSize.base)
                     }
                 }
             }
