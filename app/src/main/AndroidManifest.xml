@@ -3,6 +3,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Play Console 廣告 ID 宣告要求：即使未使用 AdMob，也需宣告此權限以避免 Play Console 阻擋上傳。
+         此 App 目前並未使用 AdMob / play-services-ads，但保留宣告以符合 Play Console 檢查邏輯。 -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+
     <application
         android:name=".PredictXApplication"
         android:allowBackup="false"
