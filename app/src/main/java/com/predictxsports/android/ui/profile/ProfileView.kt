@@ -219,12 +219,14 @@ fun ProfileView(
                 )
             }
 
-            ProfileMenuRow(
-                iconVector = Icons.Filled.Restore,
-                iconColor = Color(0xFF0F4C81),
-                title = "恢復購買",
-                subtitle = "恢復您之前的訂閱或購買項目"
-            )
+            Box(modifier = Modifier.clickable { effectiveViewModel.restorePurchases() }) {
+                ProfileMenuRow(
+                    iconVector = Icons.Filled.Restore,
+                    iconColor = Color(0xFF0F4C81),
+                    title = "恢復購買",
+                    subtitle = "恢復您之前的訂閱或購買項目"
+                )
+            }
 
             Box(modifier = Modifier.clickable { navController?.navigate(Screen.Legal.route) }) {
                 ProfileMenuRow(
