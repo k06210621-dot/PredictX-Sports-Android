@@ -93,6 +93,10 @@ fun HomeView(
     var showConfirmDialog by remember { mutableStateOf(false) }
     var matchToConfirm by remember { mutableStateOf<Match?>(null) }
 
+    // 🆕 對齊 iOS：無 AI 分析內容時的提示
+    var showNoAnalysisDialog by remember { mutableStateOf(false) }
+    var noAnalysisMatch by remember { mutableStateOf<Match?>(null) }
+
     // 解鎖成功 toast
     var showUnlockToast by remember { mutableStateOf(false) }
     var unlockToastMessage by remember { mutableStateOf("") }
@@ -204,6 +208,26 @@ fun HomeView(
         )
     }
 
+    // 🆕 對齊 iOS：無 AI 分析內容時的提示卡片（iOS HomeView.swift:295）
+    if (showNoAnalysisDialog) {
+        AlertDialog(
+            onDismissRequest = { showNoAnalysisDialog = false; noAnalysisMatch = null },
+            title = { Text("無法開啟分析", fontWeight = FontWeight.Bold) },
+            text = {
+                Text(
+                    "比賽資訊不足\n尚未有 AI 分析內容",
+                    fontSize = PredictXTextSize.md,
+                    lineHeight = 20.sp
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = { showNoAnalysisDialog = false; noAnalysisMatch = null }) {
+                    Text("了解", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
+                }
+            }
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -268,13 +292,25 @@ fun HomeView(
                                         canFavorite = true,
                                         onFavoriteToggle = { billingViewModel.toggleFavorite(match) },
                                         onCardClick = if (isUnlocked || isPaid) onMatchClick?.let { {
-                                            Log.d("HomeView", "onMatchClick forwarding for ${match.id}")
-                                            it(match)
+                                            // 🆕 [Bug Fix] 對齊 iOS：已解鎖的賽事若 hasAnalysis=false，也跳警示
+                                            if (!match.hasAnalysis) {
+                                                noAnalysisMatch = match
+                                                showNoAnalysisDialog = true
+                                            } else {
+                                                Log.d("HomeView", "onMatchClick forwarding for ${match.id}")
+                                                it(match)
+                                            }
                                         } } else null,
                                         onUnlockTapped = {
-                                            // 跳出確認彈窗，而非直接扣點
-                                            matchToConfirm = match
-                                            showConfirmDialog = true
+                                            // 🆕 [Bug Fix] 對齊 iOS：沒有 AI 分析內容的賽事，禁止使用點數開啟
+                                            if (!match.hasAnalysis) {
+                                                noAnalysisMatch = match
+                                                showNoAnalysisDialog = true
+                                            } else {
+                                                // 跳出確認彈窗，而非直接扣點
+                                                matchToConfirm = match
+                                                showConfirmDialog = true
+                                            }
                                         },
                                         modifier = Modifier.width(300.dp)
                                     )
@@ -326,18 +362,30 @@ fun HomeView(
                             onFavoriteToggle = { billingViewModel.toggleFavorite(match) },
                             onCardClick = if (isUnlocked && onMatchClick != null) {
                                 {
-                                    tapScale[match.id] = 0.95f
-                                    scope.launch {
-                                        kotlinx.coroutines.delay(120)
-                                        tapScale[match.id] = 1.0f
+                                    // 🆕 [Bug Fix] 對齊 iOS：已解鎖的賽事若 hasAnalysis=false，也跳警示
+                                    if (!match.hasAnalysis) {
+                                        noAnalysisMatch = match
+                                        showNoAnalysisDialog = true
+                                    } else {
+                                        tapScale[match.id] = 0.95f
+                                        scope.launch {
+                                            kotlinx.coroutines.delay(120)
+                                            tapScale[match.id] = 1.0f
+                                        }
+                                        onMatchClick(match)
                                     }
-                                    onMatchClick(match)
                                 }
                             } else null,
                             onUnlockTapped = {
-                                // 跳出確認彈窗，而非直接扣點
-                                matchToConfirm = match
-                                showConfirmDialog = true
+                                // 🆕 [Bug Fix] 對齊 iOS：沒有 AI 分析內容的賽事，禁止使用點數開啟
+                                if (!match.hasAnalysis) {
+                                    noAnalysisMatch = match
+                                    showNoAnalysisDialog = true
+                                } else {
+                                    // 跳出確認彈窗，而非直接扣點
+                                    matchToConfirm = match
+                                    showConfirmDialog = true
+                                }
                             }
                         )
                         }
