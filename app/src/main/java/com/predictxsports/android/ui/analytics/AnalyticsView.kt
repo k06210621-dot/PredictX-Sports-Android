@@ -1,5 +1,9 @@
 package com.predictxsports.android.ui.analytics
 
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +24,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,15 +37,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-
 import com.predictxsports.android.service.BillingViewModel
 import com.predictxsports.android.service.MembershipTier
 import com.predictxsports.android.ui.components.AnalysisSkeletonView
 import com.predictxsports.android.ui.theme.LeagueTheme
+import com.predictxsports.android.ui.theme.PredictXTextSize
 import androidx.compose.material3.MaterialTheme
 import java.text.SimpleDateFormat
 import java.util.Locale
-import com.predictxsports.android.ui.theme.PredictXTextSize
 
 /**
  * AnalyticsView — 對應 iOS AnalyticsView.swift
@@ -165,14 +170,110 @@ private fun OverallAccuracyCard(accuracy: Double) {
 
 @Composable
 private fun LockedAnalyticsContent(onUpgradeClick: (() -> Unit)?) {
+    // 🆕 P0-2 優化：付費牆升級為價值傳達型設計
     Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                Brush.verticalGradient(listOf(Color(0xFF1A1A25), Color(0xFF252538))),
+                RoundedCornerShape(16.dp)
+            )
+            .border(
+                BorderStroke(1.dp, Color(0xFF3A3A4D)),
+                RoundedCornerShape(16.dp)
+            )
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("升級至 Standard 以上方案\n即可查看完整驗證率分析", fontSize = PredictXTextSize.base, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        androidx.compose.material3.Button(onClick = { onUpgradeClick?.invoke() }) {
-            Text("查看方案")
+        // 鎖頭 icon 視覺
+        Box(
+            modifier = Modifier
+                .size(64.dp)
+                .background(
+                    Brush.linearGradient(listOf(Color(0xFF7C3AED), Color(0xFFA78BFA))),
+                    CircleShape
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("🔒", fontSize = 32.sp)
+        }
+        Spacer(Modifier.height(14.dp))
+
+        Text(
+            "解鎖完整 AI 模型驗證",
+            fontSize = PredictXTextSize.xxl,
+            fontWeight = FontWeight.Bold,
+            color = Color.White
+        )
+        Spacer(Modifier.height(6.dp))
+        Text(
+            "10 場完整紀錄 · 聯賽分佈 · 命中率趨勢圖",
+            fontSize = PredictXTextSize.md,
+            color = Color(0xFFD1D5DB)
+        )
+        Spacer(Modifier.height(18.dp))
+
+        // 方案對比卡
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFF000000).copy(alpha = 0.3f), RoundedCornerShape(12.dp))
+                .padding(14.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("✓ Standard 月訂", color = Color(0xFF10B981), fontWeight = FontWeight.SemiBold, fontSize = PredictXTextSize.md)
+                Text("NT$290", color = Color.White, fontWeight = FontWeight.Bold, fontSize = PredictXTextSize.md)
+            }
+            Spacer(Modifier.height(6.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("　└ 無限 AI 分析點數", color = Color(0xFF9CA3AF), fontSize = PredictXTextSize.sm)
+                Text("附贈", color = Color(0xFF6EE7B7), fontSize = PredictXTextSize.sm)
+            }
+            Spacer(Modifier.height(4.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("　└ 完整模型驗證報告", color = Color(0xFF9CA3AF), fontSize = PredictXTextSize.sm)
+                Text("附贈", color = Color(0xFF6EE7B7), fontSize = PredictXTextSize.sm)
+            }
+        }
+        Spacer(Modifier.height(16.dp))
+
+        // 主 CTA
+        androidx.compose.material3.Button(
+            onClick = { onUpgradeClick?.invoke() },
+            modifier = Modifier.fillMaxWidth(),
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF3B82F6)
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Text(
+                "立即升級 · NT$290/月",
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = PredictXTextSize.lg
+            )
+        }
+
+        // 安心承諾
+        Spacer(Modifier.height(10.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("✓", color = Color(0xFF10B981), fontSize = PredictXTextSize.sm)
+            Spacer(Modifier.width(6.dp))
+            Text("隨時可取消 · 7 天鑑賞期", color = Color(0xFF9CA3AF), fontSize = PredictXTextSize.sm)
         }
     }
 }
