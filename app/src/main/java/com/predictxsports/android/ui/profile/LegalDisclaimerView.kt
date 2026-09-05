@@ -236,7 +236,7 @@ fun LegalDisclaimerView(
                                             item.text,
                                             fontSize = PredictXTextSize.base,
                                             color = SportsColors.secondaryText,
-                                            lineHeight = 20.sp
+                                            lineHeight = PredictXTextSize.lineHeightSm
                                         )
                                         Spacer(Modifier.height(8.dp))
                                     }
@@ -260,7 +260,7 @@ fun LegalDisclaimerView(
                                                 item.text,
                                                 fontSize = PredictXTextSize.base,
                                                 color = SportsColors.secondaryText,
-                                                lineHeight = 20.sp,
+                                                lineHeight = PredictXTextSize.lineHeightSm,
                                                 modifier = Modifier.weight(1f)
                                             )
                                         }

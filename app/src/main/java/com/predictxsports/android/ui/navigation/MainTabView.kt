@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.sp
 
 import androidx.compose.foundation.background
 import com.predictxsports.android.ui.theme.PredictXTextSize
+import com.predictxsports.android.ui.theme.SportsColors
 
 /**
  * 每個分頁注入專屬運動風格主題色：
@@ -63,10 +64,10 @@ import com.predictxsports.android.ui.theme.PredictXTextSize
  * - 個人資訊 → 能量橙
  */
 private val tabColors = mapOf(
-    "home" to TabPalette(accent = Color(0xFF0F4C81), glow = Color(0xFF00E5FF)),
-    "analytics" to TabPalette(accent = Color(0xFFD4A843), glow = Color(0xFFFFC857)),
-    "history" to TabPalette(accent = Color(0xFF1FBF73), glow = Color(0xFF22D3EE)),
-    "profile" to TabPalette(accent = Color(0xFFFF6B35), glow = Color(0xFFFFB37C))
+    "home" to TabPalette(accent = SportsColors.brandPrimary, glow = SportsColors.cyanHighlight),
+    "analytics" to TabPalette(accent = SportsColors.brandSecondary, glow = Color(0xFFFFC857)),
+    "history" to TabPalette(accent = SportsColors.successGreen, glow = SportsColors.brandCyan),
+    "profile" to TabPalette(accent = SportsColors.brandTertiary, glow = Color(0xFFFFB37C))
 )
 
 private data class TabPalette(val accent: Color, val glow: Color)
@@ -94,7 +95,7 @@ fun MainTabView(billingViewModel: BillingViewModel? = null) {
                 val currentRoute = navBackStackEntry?.destination?.route
                 screens.forEach { screen ->
                     val isSelected = currentRoute == screen.route
-                    val palette = tabColors[screen.route] ?: TabPalette(Color(0xFF0F4C81), Color(0xFF00E5FF))
+                    val palette = tabColors[screen.route] ?: TabPalette(SportsColors.brandPrimary, SportsColors.cyanHighlight)
                     val iconScale by animateFloatAsState(
                         targetValue = if (isSelected) 1.25f else 1.0f,
                         animationSpec = spring(dampingRatio = 0.55f, stiffness = 380f),

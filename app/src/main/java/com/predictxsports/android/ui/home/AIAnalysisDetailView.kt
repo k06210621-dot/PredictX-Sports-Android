@@ -55,6 +55,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.predictxsports.android.ui.theme.PredictXTextSize
+import com.predictxsports.android.ui.theme.SportsColors
 
 /**
  * AIAnalysisDetailView — 對應 iOS AIAnalysisDetailView.swift
@@ -119,7 +120,7 @@ fun AIAnalysisDetailView(
                             Icon(
                                 imageVector = if (isFavorited) Icons.Filled.Star else Icons.Outlined.StarBorder,
                                 contentDescription = "收藏",
-                                tint = if (isFavorited) Color(0xFFD4A843) else MaterialTheme.colorScheme.onSurfaceVariant
+                                tint = if (isFavorited) SportsColors.brandSecondary else MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -156,7 +157,7 @@ private fun ErrorRetryView(message: String, onRetry: () -> Unit) {
         Icon(
             imageVector = Icons.Filled.Info,
             contentDescription = null,
-            tint = Color(0xFFE8923B),
+            tint = SportsColors.warningOrange,
             modifier = Modifier
                 .size(48.dp)
                 .padding(bottom = 16.dp)
@@ -180,7 +181,7 @@ private fun EmptyAnalysisView() {
         Icon(
             imageVector = Icons.Filled.Info,
             contentDescription = null,
-            tint = Color(0xFFE8923B),
+            tint = SportsColors.warningOrange,
             modifier = Modifier
                 .size(48.dp)
                 .padding(bottom = 16.dp)
@@ -203,7 +204,7 @@ private fun AnalysisContent(match: Match, analysis: AIAnalysisModel) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .border(
-                        BorderStroke(1.5.dp, Color(0xFF0F4C81).copy(alpha = 0.45f)),
+                        BorderStroke(1.5.dp, SportsColors.brandPrimary.copy(alpha = 0.45f)),
                         RoundedCornerShape(16.dp)
                     ),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -226,20 +227,20 @@ private fun AnalysisContent(match: Match, analysis: AIAnalysisModel) {
                             Text(
                                 "%.0f%%".format(homeProb * 100),
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF0F4C81)
+                                color = SportsColors.brandPrimary
                             )
                             Spacer(Modifier.height(4.dp))
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(8.dp)
-                                    .background(Color(0xFF0F4C81).copy(alpha = 0.25f), CircleShape)
+                                    .background(SportsColors.brandPrimary.copy(alpha = 0.25f), CircleShape)
                             ) {
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth((homeProb / (homeProb + awayProb)).toFloat().coerceIn(0f, 1f))
                                         .height(8.dp)
-                                        .background(Color(0xFF0F4C81), CircleShape)
+                                        .background(SportsColors.brandPrimary, CircleShape)
                                 )
                             }
                         }
@@ -248,20 +249,20 @@ private fun AnalysisContent(match: Match, analysis: AIAnalysisModel) {
                             Text(
                                 "%.0f%%".format(awayProb * 100),
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFFD93B3B)
+                                color = SportsColors.dangerRed
                             )
                             Spacer(Modifier.height(4.dp))
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(8.dp)
-                                    .background(Color(0xFFD93B3B).copy(alpha = 0.25f), CircleShape)
+                                    .background(SportsColors.dangerRed.copy(alpha = 0.25f), CircleShape)
                             ) {
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth((awayProb / (homeProb + awayProb)).toFloat().coerceIn(0f, 1f))
                                         .height(8.dp)
-                                        .background(Color(0xFFD93B3B), CircleShape)
+                                        .background(SportsColors.dangerRed, CircleShape)
                                 )
                             }
                         }
@@ -270,13 +271,13 @@ private fun AnalysisContent(match: Match, analysis: AIAnalysisModel) {
                     // 主客隊標籤
                     Row {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Box(Modifier.size(8.dp).background(Color(0xFF0F4C81), CircleShape))
+                            Box(Modifier.size(8.dp).background(SportsColors.brandPrimary, CircleShape))
                             Spacer(Modifier.width(4.dp))
                             Text(match.homeTeam, fontSize = PredictXTextSize.xl, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                         Spacer(Modifier.weight(1f))
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Box(Modifier.size(8.dp).background(Color(0xFFD93B3B), CircleShape))
+                            Box(Modifier.size(8.dp).background(SportsColors.dangerRed, CircleShape))
                             Spacer(Modifier.width(4.dp))
                             Text(match.awayTeam, fontSize = PredictXTextSize.xl, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
@@ -291,7 +292,7 @@ private fun AnalysisContent(match: Match, analysis: AIAnalysisModel) {
 
                     // 免責提示
                     Row(verticalAlignment = Alignment.Top) {
-                        Icon(Icons.Filled.Info, contentDescription = null, tint = Color(0xFFE8923B), modifier = Modifier.size(12.dp))
+                        Icon(Icons.Filled.Info, contentDescription = null, tint = SportsColors.warningOrange, modifier = Modifier.size(12.dp))
                         Spacer(Modifier.width(4.dp))
                         Text(
                             "AI 分析僅供參考，請理性判斷。",
@@ -315,7 +316,7 @@ private fun AnalysisContent(match: Match, analysis: AIAnalysisModel) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .border(
-                                    BorderStroke(1.5.dp, Color(0xFF0F4C81).copy(alpha = 0.45f)),
+                                    BorderStroke(1.5.dp, SportsColors.brandPrimary.copy(alpha = 0.45f)),
                                     RoundedCornerShape(16.dp)
                                 ),
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -345,7 +346,7 @@ private fun AnalysisContent(match: Match, analysis: AIAnalysisModel) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .border(
-                            BorderStroke(1.5.dp, Color(0xFF0F4C81).copy(alpha = 0.45f)),
+                            BorderStroke(1.5.dp, SportsColors.brandPrimary.copy(alpha = 0.45f)),
                             RoundedCornerShape(16.dp)
                         ),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -354,13 +355,13 @@ private fun AnalysisContent(match: Match, analysis: AIAnalysisModel) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text("深度分析", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
                         Spacer(Modifier.height(12.dp))
-                        Text(content.summary ?: "（暫無分析內容）", fontSize = PredictXTextSize.xxl, color = MaterialTheme.colorScheme.onSurface, lineHeight = 20.sp)
+                        Text(content.summary ?: "（暫無分析內容）", fontSize = PredictXTextSize.xxl, color = MaterialTheme.colorScheme.onSurface, lineHeight = PredictXTextSize.lineHeightSm)
 
                         content.keyFactors?.takeIf { it.isNotEmpty() }?.let { factors ->
                             Text("關鍵因素", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface, modifier = Modifier.padding(top = 12.dp))
                             factors.forEach { factor ->
                                 Row(verticalAlignment = Alignment.Top, modifier = Modifier.padding(vertical = 2.dp)) {
-                                    Text("✓ ", color = Color(0xFF0F4C81))
+                                    Text("✓ ", color = SportsColors.brandPrimary)
                                     Text(factor, fontSize = PredictXTextSize.xl, color = MaterialTheme.colorScheme.onSurface)
                                 }
                             }
@@ -373,7 +374,7 @@ private fun AnalysisContent(match: Match, analysis: AIAnalysisModel) {
                                     Icon(
                                         imageVector = Icons.Filled.Warning,
                                         contentDescription = null,
-                                        tint = Color(0xFFE8923B),
+                                        tint = SportsColors.warningOrange,
                                         modifier = Modifier.size(16.dp)
                                     )
                                     Spacer(Modifier.width(4.dp))

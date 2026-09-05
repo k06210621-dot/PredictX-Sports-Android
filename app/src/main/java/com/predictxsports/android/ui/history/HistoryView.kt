@@ -74,6 +74,7 @@ import java.util.Locale
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.predictxsports.android.ui.theme.PredictXTextSize
+import com.predictxsports.android.ui.theme.SportsColors
 /**
  * HistoryView — Modern sports history UI
  *
@@ -395,8 +396,8 @@ private fun HistoricalMatchCardView(match: Match, index: Int = 0) {
     val hasFinalScore = match.homeScore != null && match.awayScore != null
     val homeWin = hasFinalScore && (match.homeScore ?: 0) > (match.awayScore ?: 0)
     val awayWin = hasFinalScore && (match.awayScore ?: 0) > (match.homeScore ?: 0)
-    val winColor = Color(0xFF1FBF73)
-    val lossColor = Color(0xFFD93B3B)
+    val winColor = SportsColors.successGreen
+    val lossColor = SportsColors.dangerRed
 
     val gradient = Brush.linearGradient(
         colors = listOf(
@@ -580,7 +581,7 @@ private fun AiBadge(isHit: Boolean?) {
             )
         }
         null -> {
-            val brush = Brush.linearGradient(listOf(Color(0xFFE8923B), Color(0xFFD4A843)))
+            val brush = Brush.linearGradient(listOf(SportsColors.warningOrange, SportsColors.brandSecondary))
             AiPill(
                 text = "等待 AI 結算",
                 icon = Icons.Filled.HourglassEmpty,

@@ -67,6 +67,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.predictxsports.android.ui.theme.PredictXTextSize
+import com.predictxsports.android.ui.theme.SportsColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,7 +112,7 @@ fun HomeView(
     // 下拉刷新成功/失敗 toast
     var showRefreshToast by remember { mutableStateOf(false) }
     var refreshToastMessage by remember { mutableStateOf("") }
-    var refreshToastColor by remember { mutableStateOf(Color(0xFF1FBF73)) }
+    var refreshToastColor by remember { mutableStateOf(SportsColors.successGreen) }
 
     // API 載入錯誤提示（一次性 Toast）
     LaunchedEffect(errorMessage) {
@@ -179,7 +180,7 @@ fun HomeView(
                 Text(
                     "點選同意後將扣除 20 點分析點數查看本場賽事 AI 詳情分析。\n\n目前剩餘：$formattedRemaining 點",
                     fontSize = PredictXTextSize.md,
-                    lineHeight = 20.sp
+                    lineHeight = PredictXTextSize.lineHeightSm
                 )
             },
             confirmButton = {
@@ -217,7 +218,7 @@ fun HomeView(
                 Text(
                     "比賽資訊不足\n尚未有 AI 分析內容",
                     fontSize = PredictXTextSize.md,
-                    lineHeight = 20.sp
+                    lineHeight = PredictXTextSize.lineHeightSm
                 )
             },
             confirmButton = {
@@ -272,7 +273,7 @@ fun HomeView(
                             SectionHeader(
                                 title = "AI 重點觀察賽事",
                                 icon = Icons.Filled.LocalFireDepartment,
-                                iconTint = Color(0xFFE8923B)
+                                iconTint = SportsColors.warningOrange
                             )
                             Spacer(Modifier.height(6.dp))
                             androidx.compose.foundation.lazy.LazyRow(
@@ -312,7 +313,7 @@ fun HomeView(
                                                 showConfirmDialog = true
                                             }
                                         },
-                                        modifier = Modifier.width(300.dp)
+                                        modifier = Modifier.width(270.dp)
                                     )
                                 }
                             }
@@ -326,7 +327,7 @@ fun HomeView(
                     SectionHeader(
                         title = "${selectedLeague.displayName} AI 數據預報",
                         icon = Icons.Filled.Memory,
-                        iconTint = Color(0xFF00E5FF)
+                        iconTint = SportsColors.cyanHighlight
                     )
                 }
                 if (filteredPredictions.isEmpty()) {
@@ -406,7 +407,7 @@ fun HomeView(
                         Icon(
                             imageVector = Icons.Filled.Warning,
                             contentDescription = null,
-                            tint = Color(0xFFE8923B),
+                            tint = SportsColors.warningOrange,
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(Modifier.width(4.dp))
@@ -437,7 +438,7 @@ fun HomeView(
         ) {
             androidx.compose.material3.Surface(
                 shape = RoundedCornerShape(50),
-                color = Color(0xFF1FBF73).copy(alpha = 0.95f),
+                color = SportsColors.successGreen.copy(alpha = 0.95f),
                 shadowElevation = 8.dp,
                 tonalElevation = 0.dp
             ) {
@@ -452,7 +453,7 @@ fun HomeView(
                             .background(Color.White, RoundedCornerShape(50)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(Icons.Filled.CheckCircle, contentDescription = null, tint = Color(0xFF1FBF73), modifier = Modifier.size(20.dp))
+                        Icon(Icons.Filled.CheckCircle, contentDescription = null, tint = SportsColors.successGreen, modifier = Modifier.size(20.dp))
                     }
                     Text(unlockToastMessage, fontSize = PredictXTextSize.md, fontWeight = FontWeight.SemiBold, color = Color.White)
                 }
@@ -478,7 +479,7 @@ fun HomeView(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Icon(Icons.Filled.Memory, contentDescription = null, tint = Color(0xFF00E5FF), modifier = Modifier.size(18.dp))
+                    Icon(Icons.Filled.Memory, contentDescription = null, tint = SportsColors.cyanHighlight, modifier = Modifier.size(18.dp))
                     Text(spendToastMessage, fontSize = PredictXTextSize.base, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onSurface)
                 }
             }
@@ -527,7 +528,7 @@ private fun SectionHeader(
             modifier = Modifier
                 .width(5.dp)
                 .height(22.dp)
-                .background(Color(0xFF00E5FF).copy(alpha = 0.85f))
+                .background(SportsColors.cyanHighlight.copy(alpha = 0.85f))
         )
         Spacer(Modifier.width(10.dp))
         Icon(

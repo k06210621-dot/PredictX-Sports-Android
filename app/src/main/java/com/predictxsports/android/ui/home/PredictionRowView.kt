@@ -41,6 +41,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import com.predictxsports.android.ui.theme.PredictXTextSize
+import com.predictxsports.android.ui.theme.SportsColors
 import androidx.compose.foundation.layout.widthIn
 
 @Composable
@@ -113,7 +114,7 @@ fun PredictionRowView(
                         Icon(
                             imageVector = if (isFavorited) Icons.Filled.Star else Icons.Outlined.StarBorder,
                             contentDescription = "收藏",
-                            tint = if (isFavorited) Color(0xFFD4A843) else MaterialTheme.colorScheme.onSurfaceVariant,
+                            tint = if (isFavorited) SportsColors.brandSecondary else MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(18.dp)
                         )
                     }
@@ -229,11 +230,11 @@ fun CompactPredictionRowView(
             .padding(2.dp)
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
             .border(
-                width = 1.5.dp,
+                width = 1.dp,
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        themeColor.copy(alpha = 0.85f),
-                        themeColor.copy(alpha = 0.35f)
+                        themeColor.copy(alpha = 0.5f),
+                        themeColor.copy(alpha = 0.15f)
                     )
                 ),
                 shape = RoundedCornerShape(16.dp)
@@ -288,7 +289,7 @@ fun CompactPredictionRowView(
                         Icon(
                             imageVector = if (isFavorited) Icons.Filled.Star else Icons.Outlined.StarBorder,
                             contentDescription = "收藏",
-                            tint = if (isFavorited) Color(0xFFD4A843) else MaterialTheme.colorScheme.onSurfaceVariant,
+                            tint = if (isFavorited) SportsColors.brandSecondary else MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(16.dp)
                         )
                     }

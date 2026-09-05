@@ -42,6 +42,7 @@ import com.predictxsports.android.service.MembershipTier
 import com.predictxsports.android.ui.components.AnalysisSkeletonView
 import com.predictxsports.android.ui.theme.LeagueTheme
 import com.predictxsports.android.ui.theme.PredictXTextSize
+import com.predictxsports.android.ui.theme.SportsColors
 import androidx.compose.material3.MaterialTheme
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -148,7 +149,7 @@ private fun OverallAccuracyCard(accuracy: Double) {
                     "PredictX AI 模型綜合驗證率",
                     fontSize = PredictXTextSize.sm,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF0F4C81)
+                    color = SportsColors.brandPrimary
                 )
                 Spacer(Modifier.weight(1f))
                 Text("全體聯賽加權計算", fontSize = PredictXTextSize.sm, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -264,17 +265,7 @@ private fun LockedAnalyticsContent(onUpgradeClick: (() -> Unit)?) {
             )
         }
 
-        // 安心承諾
-        Spacer(Modifier.height(10.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("✓", color = Color(0xFF10B981), fontSize = PredictXTextSize.sm)
-            Spacer(Modifier.width(6.dp))
-            Text("隨時可取消 · 7 天鑑賞期", color = Color(0xFF9CA3AF), fontSize = PredictXTextSize.sm)
-        }
+        // 安心承諾（已移除：免費試用相關承諾未在正式設定中）
     }
 }
 
@@ -304,7 +295,7 @@ private fun RecentFormSection(
                             modifier = Modifier
                                 .size(28.dp)
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(if (item.isHit) Color(0xFF1FBF73) else Color(0xFFD93B3B))
+                                .background(if (item.isHit) SportsColors.successGreen else SportsColors.dangerRed)
                                 .then(
                                     if (onSettlementClick != null) Modifier.clickable { onSettlementClick(item) } else Modifier
                                 ),
@@ -335,7 +326,7 @@ private fun FormDetailRow(item: RecentSettlement) {
     ) {
         Text(
             if (item.isHit) "✓" else "✕",
-            color = if (item.isHit) Color(0xFF1FBF73) else Color(0xFFD93B3B),
+            color = if (item.isHit) SportsColors.successGreen else SportsColors.dangerRed,
             fontWeight = FontWeight.Bold
         )
         Spacer(Modifier.width(10.dp))

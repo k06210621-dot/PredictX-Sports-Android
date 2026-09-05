@@ -74,6 +74,7 @@ import com.predictxsports.android.ui.theme.ThemeController
 import com.predictxsports.android.ui.theme.ThemeRevealController
 import com.predictxsports.android.ui.theme.ThemeRevealOverlay
 import com.predictxsports.android.ui.theme.PredictXTextSize
+import com.predictxsports.android.ui.theme.SportsColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -130,7 +131,7 @@ fun ProfileView(
                         Icon(
                             imageVector = if (isDarkMode) Icons.Filled.Brightness7 else Icons.Filled.Brightness4,
                             contentDescription = if (isDarkMode) "切換亮色模式" else "切換暗色模式",
-                            tint = Color(0xFFD4A843)
+                            tint = SportsColors.brandSecondary
                         )
                     }
                 }
@@ -158,7 +159,7 @@ fun ProfileView(
             Box(modifier = Modifier.clickable { navController?.navigate(Screen.Subscribe.route) }) {
                 ProfileMenuRow(
                     iconVector = Icons.Filled.WorkspacePremium,
-                    iconColor = Color(0xFFD4A843),
+                    iconColor = SportsColors.brandSecondary,
                     title = "訂閱中心",
                     subtitle = "管理您的訂閱方案"
                 )
@@ -213,7 +214,7 @@ fun ProfileView(
             Box(modifier = Modifier.clickable { navController?.navigate(Screen.Help.route) }) {
                 ProfileMenuRow(
                     iconVector = Icons.AutoMirrored.Filled.Help,
-                    iconColor = Color(0xFF1FBF73),
+                    iconColor = SportsColors.successGreen,
                     title = "客服中心",
                     subtitle = "常見問題、意見回饋、聯絡客服"
                 )
@@ -222,7 +223,7 @@ fun ProfileView(
             Box(modifier = Modifier.clickable { effectiveViewModel.restorePurchases() }) {
                 ProfileMenuRow(
                     iconVector = Icons.Filled.Restore,
-                    iconColor = Color(0xFF0F4C81),
+                    iconColor = SportsColors.brandPrimary,
                     title = "恢復購買",
                     subtitle = "恢復您之前的訂閱或購買項目"
                 )
@@ -435,8 +436,8 @@ private fun AiQuotaCard(
                     .background(
                         brush = Brush.linearGradient(
                             colors = listOf(
-                                Color(0xFF0F4C81).copy(alpha = 0.20f),
-                                Color(0xFF0F4C81).copy(alpha = 0.08f)
+                                SportsColors.brandPrimary.copy(alpha = 0.20f),
+                                SportsColors.brandPrimary.copy(alpha = 0.08f)
                             )
                         ),
                         shape = RoundedCornerShape(12.dp)
@@ -445,8 +446,8 @@ private fun AiQuotaCard(
                         width = 0.5.dp,
                         brush = Brush.linearGradient(
                             colors = listOf(
-                                Color(0xFF0F4C81).copy(alpha = 0.45f),
-                                Color(0xFF0F4C81).copy(alpha = 0.15f)
+                                SportsColors.brandPrimary.copy(alpha = 0.45f),
+                                SportsColors.brandPrimary.copy(alpha = 0.15f)
                             )
                         ),
                         shape = RoundedCornerShape(12.dp)
@@ -456,7 +457,7 @@ private fun AiQuotaCard(
                 Icon(
                     imageVector = Icons.Filled.Memory,
                     contentDescription = null,
-                    tint = Color(0xFF0F4C81),
+                    tint = SportsColors.brandPrimary,
                     modifier = Modifier.size(22.dp)
                 )
             }

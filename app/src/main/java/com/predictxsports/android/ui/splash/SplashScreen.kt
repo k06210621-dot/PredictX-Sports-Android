@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.viewinterop.AndroidView
 import com.predictxsports.android.R
+import com.predictxsports.android.ui.theme.SportsColors
 import kotlinx.coroutines.delay
 
 private const val TAG = "SplashScreen"
@@ -46,7 +47,7 @@ fun SplashScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF0F4C81))  // fallback 背景色，避免 VideoView 解碼失敗時黑屏
+            .background(SportsColors.brandPrimary)  // fallback 背景色，避免 VideoView 解碼失敗時黑屏
     ) {
         AndroidView(
             modifier = Modifier.fillMaxSize(),

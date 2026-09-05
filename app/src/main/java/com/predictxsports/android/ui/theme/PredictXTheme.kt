@@ -57,6 +57,18 @@ object SportsColors {
     val primaryText @Composable get() = MaterialTheme.colorScheme.onSurface
     val secondaryText @Composable get() = MaterialTheme.colorScheme.onSurfaceVariant
     val tertiaryText @Composable get() = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
+
+    // ── 品牌色（P0-3 顏色 token 化） ──
+    val brandPrimary    = Color(0xFF0F4C81)   // 主藍 — 標題、圖示、Focus 框架
+    val brandSecondary  = Color(0xFFD4A843)   // 金/棕 — 收藏星星、次要強調
+    val brandTertiary   = Color(0xFFFF6B35)   // 活力橘 — 原 energyOrange，同名保留
+    val brandCyan       = Color(0xFF22D3EE)   // 活力 Cyan — 原 energyCyan，同名保留
+
+    // ── 語意色（P0-3 顏色 token 化） ──
+    val successGreen    = Color(0xFF1FBF73)   // 命中／成功／刷新吐司綠
+    val warningOrange   = Color(0xFFE8923B)   // 警告／橘 — 最佳優惠、標籤、通知
+    val dangerRed       = Color(0xFFD93B3B)   // 未命中／錯誤／敗 北
+    val cyanHighlight   = Color(0xFF00E5FF)   // Cyan 高亮 — 記憶卡、藍色標籤框
 }
 
 // ── 深色運動背景 (iOS SportsDarkBackground) ──
@@ -139,6 +151,9 @@ object PredictXTextSize {
     val heroXl = 38.sp   // 信心度儀表板大數字
     val heroLg = 40.sp   // 大數字（會員卡點數，42.sp 併入）
     val displayLg = 48.sp // 顯示器級（如驗證率 %）
+
+    // ── 行高 token（P1 字體 token 化） ──
+    val lineHeightSm = 20.sp  // 對話框 / 內文短敘述 / 列表項行高
 }
 
 // ── 應用主題入口 ──

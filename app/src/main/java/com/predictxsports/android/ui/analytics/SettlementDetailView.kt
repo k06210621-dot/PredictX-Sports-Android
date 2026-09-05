@@ -49,6 +49,7 @@ import com.predictxsports.android.data.remote.RetrofitClient
 import com.predictxsports.android.ui.components.AnalysisSkeletonView
 import com.predictxsports.android.ui.components.RadarChartView
 import com.predictxsports.android.ui.theme.PredictXTextSize
+import com.predictxsports.android.ui.theme.SportsColors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -137,7 +138,7 @@ private fun SettlementErrorView(message: String, onRetry: () -> Unit) {
         Icon(
             imageVector = Icons.Filled.Warning,
             contentDescription = null,
-            tint = Color(0xFFE8923B),
+            tint = SportsColors.warningOrange,
             modifier = Modifier.size(48.dp)
         )
         Spacer(Modifier.height(16.dp))
@@ -255,14 +256,14 @@ private fun HeaderCard(settlement: RecentSettlement) {
                 Icon(
                     imageVector = if (settlement.isHit) Icons.Filled.CheckCircle else Icons.Filled.Warning,
                     contentDescription = null,
-                    tint = if (settlement.isHit) Color(0xFF1FBF73) else Color(0xFFD93B3B),
+                    tint = if (settlement.isHit) SportsColors.successGreen else SportsColors.dangerRed,
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(Modifier.width(6.dp))
                 Text(
                     if (settlement.isHit) "AI 推論正確" else "AI 推論錯誤",
                     fontWeight = FontWeight.Bold,
-                    color = if (settlement.isHit) Color(0xFF1FBF73) else Color(0xFFD93B3B)
+                    color = if (settlement.isHit) SportsColors.successGreen else SportsColors.dangerRed
                 )
             }
         }
@@ -282,7 +283,7 @@ private fun ScoreComparisonCard(settlement: RecentSettlement) {
                 ScoreColumn(
                     title = "模型推演比分",
                     score = settlement.predictedScore ?: "—",
-                    tint = Color(0xFF0F4C81),
+                    tint = SportsColors.brandPrimary,
                     modifier = Modifier.weight(1f)
                 )
                 Box(
@@ -294,7 +295,7 @@ private fun ScoreComparisonCard(settlement: RecentSettlement) {
                 ScoreColumn(
                     title = "實際比分",
                     score = formatActualScore(settlement),
-                    tint = if (settlement.isHit) Color(0xFF1FBF73) else Color(0xFFD93B3B),
+                    tint = if (settlement.isHit) SportsColors.successGreen else SportsColors.dangerRed,
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -322,7 +323,7 @@ private fun SummaryCard(summary: String) {
         shape = RoundedCornerShape(16.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text("AI 分析摘要", fontWeight = FontWeight.SemiBold, color = Color(0xFF0F4C81))
+            Text("AI 分析摘要", fontWeight = FontWeight.SemiBold, color = SportsColors.brandPrimary)
             Text(summary, fontSize = PredictXTextSize.md, color = MaterialTheme.colorScheme.onSurface)
         }
     }
@@ -345,9 +346,9 @@ private fun ConfidenceCard(settlement: RecentSettlement, prediction: AIAnalysisM
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(settlement.homeTeam, fontSize = PredictXTextSize.sm, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                 Spacer(Modifier.weight(1f))
-                Text("${(homeProb * 100).toInt()}%", fontWeight = FontWeight.Bold, color = Color(0xFF0F4C81))
+                Text("${(homeProb * 100).toInt()}%", fontWeight = FontWeight.Bold, color = SportsColors.brandPrimary)
                 Text(" vs ", fontSize = PredictXTextSize.sm, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text("${(awayProb * 100).toInt()}%", fontWeight = FontWeight.Bold, color = Color(0xFFD93B3B))
+                Text("${(awayProb * 100).toInt()}%", fontWeight = FontWeight.Bold, color = SportsColors.dangerRed)
                 Spacer(Modifier.weight(1f))
                 Text(settlement.awayTeam, fontSize = PredictXTextSize.sm, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
             }
@@ -357,13 +358,13 @@ private fun ConfidenceCard(settlement: RecentSettlement, prediction: AIAnalysisM
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(8.dp)
-                    .background(Color(0xFFD93B3B), CircleShape)
+                    .background(SportsColors.dangerRed, CircleShape)
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(homeProb.toFloat().coerceIn(0f, 1f))
                         .height(8.dp)
-                        .background(Color(0xFF0F4C81), CircleShape)
+                        .background(SportsColors.brandPrimary, CircleShape)
                 )
             }
 
@@ -384,7 +385,7 @@ private fun ConfidenceCard(settlement: RecentSettlement, prediction: AIAnalysisM
 
 @Composable
 private fun FactorsCard(title: String, factors: List<String>, isRisk: Boolean) {
-    val tint = if (isRisk) Color(0xFFE8923B) else Color(0xFF1FBF73)
+    val tint = if (isRisk) SportsColors.warningOrange else SportsColors.successGreen
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -417,10 +418,10 @@ private fun formatDate(matchDate: Long): String {
 }
 
 private fun confidenceColor(value: Double): Color = when {
-    value < 4.0 -> Color(0xFFD93B3B)
-    value < 6.0 -> Color(0xFFE8923B)
-    value < 8.0 -> Color(0xFFD4A843)
-    else -> Color(0xFF1FBF73)
+    value < 4.0 -> SportsColors.dangerRed
+    value < 6.0 -> SportsColors.warningOrange
+    value < 8.0 -> SportsColors.brandSecondary
+    else -> SportsColors.successGreen
 }
 
 private fun leagueIcon(league: String): String = when (league) {

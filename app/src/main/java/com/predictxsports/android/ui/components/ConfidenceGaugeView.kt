@@ -120,10 +120,10 @@ fun ConfidenceGaugeView(
                     path = gaugeArcPath(centerX, centerY, radius, 180f, endAngle),
                     brush = androidx.compose.ui.graphics.Brush.sweepGradient(
                         colors = listOf(
-                            Color(0xFFD93B3B),  // 紅
-                            Color(0xFFE8923B),  // 橙
-                            Color(0xFFE8C53B),  // 黃
-                            Color(0xFF1FBF73)   // 綠
+                            SportsColors.dangerRed,    // 紅
+                            SportsColors.warningOrange, // 橙
+                            Color(0xFFE8C53B),          // 黃（暫無對應 token）
+                            SportsColors.successGreen   // 綠
                         ),
                         center = Offset(centerX, centerY)
                     ),
@@ -173,7 +173,7 @@ fun ConfidenceGaugeView(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp)
             ) {
-                Box(modifier = Modifier.size(8.dp).background(Color(0xFF0F4C81), CircleShape))
+                Box(modifier = Modifier.size(8.dp).background(SportsColors.brandPrimary, CircleShape))
                 Text(text = homeTeam, fontSize = PredictXTextSize.sm, color = SportsColors.secondaryText)
             }
             Spacer(Modifier.weight(1f))
@@ -181,7 +181,7 @@ fun ConfidenceGaugeView(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp)
             ) {
-                Box(modifier = Modifier.size(8.dp).background(Color(0xFFD93B3B), CircleShape))
+                Box(modifier = Modifier.size(8.dp).background(SportsColors.dangerRed, CircleShape))
                 Text(text = awayTeam, fontSize = PredictXTextSize.sm, color = SportsColors.secondaryText)
             }
         }
@@ -189,10 +189,10 @@ fun ConfidenceGaugeView(
 }
 
 private fun gaugeColorFor(confidence: Double): Color = when {
-    confidence >= 0.85 -> Color(0xFF1FBF73)  // 深綠
-    confidence >= 0.70 -> Color(0xFF0F4C81)  // 藍
-    confidence >= 0.55 -> Color(0xFFE8923B)  // 橙
-    else -> Color(0xFFD93B3B)                // 紅
+    confidence >= 0.85 -> SportsColors.successGreen   // 深綠
+    confidence >= 0.70 -> SportsColors.brandPrimary   // 藍
+    confidence >= 0.55 -> SportsColors.warningOrange  // 橙
+    else -> SportsColors.dangerRed                    // 紅
 }
 
 private fun confidenceLabel(confidence: Double): String = when {

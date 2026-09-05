@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import kotlin.math.cos
 import kotlin.math.sin
 import com.predictxsports.android.ui.theme.PredictXTextSize
+import com.predictxsports.android.ui.theme.SportsColors
 
 /**
  * RadarChartView — 對應 iOS RadarChartView.swift
@@ -45,8 +46,8 @@ fun RadarChartView(
     awayValues: List<Double>,
     homeTeamName: String = "主隊",
     awayTeamName: String = "客隊",
-    homeColor: Color = Color(0xFF0F4C81),
-    awayColor: Color = Color(0xFFD93B3B),
+    homeColor: Color = SportsColors.brandPrimary,
+    awayColor: Color = SportsColors.dangerRed,
     modifier: Modifier = Modifier
 ) {
     val textColorInt = if (MaterialTheme.colorScheme.background == Color(0xFF0F1220)) {

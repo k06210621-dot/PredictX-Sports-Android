@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.MaterialTheme
 import com.predictxsports.android.ui.theme.PredictXTextSize
+import com.predictxsports.android.ui.theme.SportsColors
 
 /**
  * WinRateBar — 對應 iOS WinRateBar (Swift)
@@ -50,8 +51,8 @@ fun WinRateBar(
     isLocked: Boolean = false,
     onUnlockTapped: (() -> Unit)? = null,
     costHint: Int = 0,
-    homeColor: Color = Color(0xFF0F4C81),
-    awayColor: Color = Color(0xFFD4A843)
+    homeColor: Color = SportsColors.brandPrimary,
+    awayColor: Color = SportsColors.brandSecondary
 ) {
     val safeHome = homeWinRate.coerceIn(0.0, 1.0)
     val awayRate = 1.0 - safeHome
@@ -103,61 +104,48 @@ fun WinRateBar(
                 }
             }
         } else {
-            // 雙向勝率條
+            // 對齊 iOS：同一行顯示「隊伍名稱 %」，而非分兩行
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                PercentageText(targetPercent = (animatedHome * 100).toInt(), color = homeColor, fontWeight = FontWeight.Bold)
-                PercentageText(targetPercent = (animatedAway * 100).toInt(), color = awayColor, fontWeight = FontWeight.Bold)
+                Text(
+                    text = "${homeTeam} ${(animatedHome * 100).toInt()}%",
+                    fontSize = PredictXTextSize.sm,
+                    fontWeight = FontWeight.Bold,
+                    color = homeColor
+                )
+                Text(
+                    text = "${(animatedAway * 100).toInt()}% ${awayTeam}",
+                    fontSize = PredictXTextSize.sm,
+                    fontWeight = FontWeight.Bold,
+                    color = awayColor
+                )
             }
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(2.dp))
             // 主隊（由中央往兩側 grow）
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(8.dp)
-                    .clip(RoundedCornerShape(4.dp))
+                    .height(6.dp)
+                    .clip(RoundedCornerShape(3.dp))
             ) {
                 Box(
                     modifier = Modifier
                         .weight(animatedHome.coerceAtLeast(0.001f))
                         .fillMaxWidth()
-                        .height(8.dp)
+                        .height(6.dp)
                         .background(homeColor)
                 )
                 Box(
                     modifier = Modifier
                         .weight(animatedAway.coerceAtLeast(0.001f))
                         .fillMaxWidth()
-                        .height(8.dp)
+                        .height(6.dp)
                         .background(awayColor)
                 )
             }
-            Spacer(Modifier.height(4.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(homeTeam, fontSize = PredictXTextSize.sm, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text(awayTeam, fontSize = PredictXTextSize.sm, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
         }
     }
-}
-
-@Composable
-private fun PercentageText(targetPercent: Int, color: Color, fontWeight: FontWeight) {
-    val animatable = remember { androidx.compose.animation.core.Animatable(0f) }
-    LaunchedEffect(targetPercent) {
-        animatable.snapTo(0f)
-        animatable.animateTo(targetPercent.toFloat(), animationSpec = tween(800, delayMillis = 100))
-    }
-    Text(
-        text = "${animatable.value.toInt()}%",
-        fontSize = PredictXTextSize.md,
-        fontWeight = fontWeight,
-        color = color
-    )
 }

@@ -46,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.predictxsports.android.ui.theme.PredictXTextSize
+import com.predictxsports.android.ui.theme.SportsColors
 
 /**
  * 客服中心頁面
@@ -106,7 +107,7 @@ fun HelpView(onNavigateBack: () -> Unit) {
             ContactButton(
                 icon = Icons.Filled.Email,
                 label = "Email：k06210621@gmail.com",
-                accent = Color(0xFF0F4C81),
+                accent = SportsColors.brandPrimary,
                 onClick = {
                     val intent = Intent(Intent.ACTION_SENDTO).apply {
                         data = Uri.parse("mailto:k06210621@gmail.com")
@@ -233,7 +234,7 @@ private fun FAQCard(item: FAQItem) {
                     item.answer,
                     fontSize = PredictXTextSize.base,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    lineHeight = 20.sp
+                    lineHeight = PredictXTextSize.lineHeightSm
                 )
             }
         }

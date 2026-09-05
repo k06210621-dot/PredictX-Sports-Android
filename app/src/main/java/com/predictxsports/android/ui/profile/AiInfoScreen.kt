@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.predictxsports.android.ui.theme.PredictXTextSize
+import com.predictxsports.android.ui.theme.SportsColors
 
 /**
  * AI 分析點數說明（彈窗）
@@ -52,7 +53,7 @@ fun AiInfoScreen(
                 Icon(
                     imageVector = Icons.Filled.Info,
                     contentDescription = null,
-                    tint = Color(0xFFE8923B),
+                    tint = SportsColors.warningOrange,
                     modifier = Modifier.size(36.dp)
                 )
             },
@@ -71,7 +72,7 @@ fun AiInfoScreen(
                     text = "分析點數可用於解鎖 Basic 方案的 AI 詳細分析。升級 Standard 或 Premium 方案即可享有無限分析額度。",
                     fontSize = PredictXTextSize.md,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    lineHeight = 20.sp,
+                    lineHeight = PredictXTextSize.lineHeightSm,
                     textAlign = TextAlign.Start
                 )
             },
@@ -81,7 +82,7 @@ fun AiInfoScreen(
                         showDialog = false
                         onNavigateSubscribe()
                     },
-                    colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFF0F4C81))
+                    colors = ButtonDefaults.textButtonColors(contentColor = SportsColors.brandPrimary)
                 ) {
                     Text("升級方案", fontWeight = FontWeight.Bold, fontSize = PredictXTextSize.md)
                 }

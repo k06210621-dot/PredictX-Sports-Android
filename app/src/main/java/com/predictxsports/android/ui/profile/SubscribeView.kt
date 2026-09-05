@@ -113,7 +113,7 @@ fun SubscribeView(
                         modifier = Modifier
                             .weight(1f)
                             .clip(RoundedCornerShape(50))
-                            .background(if (selected) Color(0xFF0F4C81) else Color.Transparent)
+                            .background(if (selected) SportsColors.brandPrimary else Color.Transparent)
                             .clickable { isAnnual = annual }
                             .padding(vertical = 10.dp),
                         contentAlignment = Alignment.Center
@@ -169,7 +169,7 @@ fun SubscribeView(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isProcessing && BillingManager.isReady.value,
                 shape = RoundedCornerShape(50),
-                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Color(0xFF0F4C81))
+                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = SportsColors.brandPrimary)
             ) {
                 if (isProcessing) {
                     androidx.compose.material3.CircularProgressIndicator(modifier = Modifier.size(18.dp), strokeWidth = 2.dp, color = Color.White)
@@ -232,7 +232,7 @@ private fun TierCardHorizontal(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(50))
-                            .background(Color(0xFFE8923B))
+                            .background(SportsColors.warningOrange)
                             .padding(horizontal = 6.dp, vertical = 3.dp)
                     ) {
                         Text("Best Offer", fontSize = PredictXTextSize.sm, fontWeight = FontWeight.Bold, color = Color.White)
