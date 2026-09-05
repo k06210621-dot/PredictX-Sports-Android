@@ -234,7 +234,7 @@ private fun LockedAnalyticsContent(onUpgradeClick: (() -> Unit)?) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text("　└ 無限 AI 分析點數", color = Color(0xFF9CA3AF), fontSize = PredictXTextSize.sm)
-                Text("附贈", color = Color(0xFF6EE7B7), fontSize = PredictXTextSize.sm)
+                Text("包含", color = Color(0xFF6EE7B7), fontSize = PredictXTextSize.sm)
             }
             Spacer(Modifier.height(4.dp))
             Row(
@@ -242,7 +242,7 @@ private fun LockedAnalyticsContent(onUpgradeClick: (() -> Unit)?) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text("　└ 完整模型驗證報告", color = Color(0xFF9CA3AF), fontSize = PredictXTextSize.sm)
-                Text("附贈", color = Color(0xFF6EE7B7), fontSize = PredictXTextSize.sm)
+                Text("包含", color = Color(0xFF6EE7B7), fontSize = PredictXTextSize.sm)
             }
         }
         Spacer(Modifier.height(16.dp))
