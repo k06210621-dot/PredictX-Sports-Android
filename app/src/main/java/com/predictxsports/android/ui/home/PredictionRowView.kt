@@ -229,11 +229,11 @@ fun CompactPredictionRowView(
             .padding(2.dp)
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
             .border(
-                width = 1.dp,
+                width = 1.5.dp,
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        themeColor.copy(alpha = 0.5f),
-                        themeColor.copy(alpha = 0.15f)
+                        themeColor.copy(alpha = 0.85f),
+                        themeColor.copy(alpha = 0.35f)
                     )
                 ),
                 shape = RoundedCornerShape(16.dp)

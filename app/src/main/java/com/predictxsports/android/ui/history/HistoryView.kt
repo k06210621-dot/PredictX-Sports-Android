@@ -392,6 +392,12 @@ private fun HistoricalMatchCardView(match: Match, index: Int = 0) {
     val themeColor = LeagueTheme.color(match.league)
     val df = SimpleDateFormat("MM/dd (EEE)", Locale.TAIWAN)
 
+    val hasFinalScore = match.homeScore != null && match.awayScore != null
+    val homeWin = hasFinalScore && (match.homeScore ?: 0) > (match.awayScore ?: 0)
+    val awayWin = hasFinalScore && (match.awayScore ?: 0) > (match.homeScore ?: 0)
+    val winColor = Color(0xFF1FBF73)
+    val lossColor = Color(0xFFD93B3B)
+
     val gradient = Brush.linearGradient(
         colors = listOf(
             MaterialTheme.colorScheme.surface,
@@ -456,13 +462,21 @@ private fun HistoricalMatchCardView(match: Match, index: Int = 0) {
                         text = match.homeTeam,
                         fontSize = PredictXTextSize.xl,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = when {
+                            homeWin -> winColor
+                            awayWin && hasFinalScore -> lossColor
+                            else -> MaterialTheme.colorScheme.onSurface
+                        }
                     )
                     if (match.homeTeamCN.isNotBlank()) {
                         Text(
                             text = match.homeTeamCN,
                             fontSize = PredictXTextSize.base,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = when {
+                                homeWin -> winColor.copy(alpha = 0.85f)
+                                awayWin && hasFinalScore -> lossColor.copy(alpha = 0.85f)
+                                else -> MaterialTheme.colorScheme.onSurfaceVariant
+                            }
                         )
                     }
                 }
@@ -504,14 +518,22 @@ private fun HistoricalMatchCardView(match: Match, index: Int = 0) {
                         text = match.awayTeam,
                         fontSize = PredictXTextSize.xl,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface,
+                        color = when {
+                            awayWin -> winColor
+                            homeWin -> lossColor
+                            else -> MaterialTheme.colorScheme.onSurface
+                        },
                         textAlign = TextAlign.End
                     )
                     if (match.awayTeamCN.isNotBlank()) {
                         Text(
                             text = match.awayTeamCN,
                             fontSize = PredictXTextSize.base,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            color = when {
+                                awayWin -> winColor.copy(alpha = 0.85f)
+                                homeWin -> lossColor.copy(alpha = 0.85f)
+                                else -> MaterialTheme.colorScheme.onSurfaceVariant
+                            },
                             textAlign = TextAlign.End
                         )
                     }
