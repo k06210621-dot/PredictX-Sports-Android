@@ -13,8 +13,8 @@ android {
         applicationId = "com.predictxsports.android"
         minSdk = 26
         targetSdk = 36
-        versionCode = 14
-        versionName = "1.0.2"
+        versionCode = 15
+        versionName = "1.0.3"
     }
 
     signingConfigs {
