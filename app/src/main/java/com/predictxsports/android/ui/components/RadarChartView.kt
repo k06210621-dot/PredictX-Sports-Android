@@ -50,7 +50,7 @@ fun RadarChartView(
     awayColor: Color = SportsColors.dangerRed,
     modifier: Modifier = Modifier
 ) {
-    val textColorInt = if (MaterialTheme.colorScheme.background == Color(0xFF0F1220)) {
+    val textColorInt = if (MaterialTheme.colorScheme.background == SportsColors.darkBg) {
         android.graphics.Color.WHITE
     } else {
         android.graphics.Color.parseColor("#1C1C1E")

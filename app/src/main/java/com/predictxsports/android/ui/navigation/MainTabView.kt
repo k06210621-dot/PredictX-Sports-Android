@@ -65,9 +65,9 @@ import com.predictxsports.android.ui.theme.SportsColors
  */
 private val tabColors = mapOf(
     "home" to TabPalette(accent = SportsColors.brandPrimary, glow = SportsColors.cyanHighlight),
-    "analytics" to TabPalette(accent = SportsColors.brandSecondary, glow = Color(0xFFFFC857)),
+    "analytics" to TabPalette(accent = SportsColors.brandSecondary, glow = SportsColors.tabGlowYellow),
     "history" to TabPalette(accent = SportsColors.successGreen, glow = SportsColors.brandCyan),
-    "profile" to TabPalette(accent = SportsColors.brandTertiary, glow = Color(0xFFFFB37C))
+    "profile" to TabPalette(accent = SportsColors.brandTertiary, glow = SportsColors.tabGlowOrange)
 )
 
 private data class TabPalette(val accent: Color, val glow: Color)
@@ -83,7 +83,7 @@ fun MainTabView(billingViewModel: BillingViewModel? = null) {
         val context = LocalContext.current
         LaunchedEffect(it) { it.init(context) }
     }
-    val inactiveColor = Color(0xFF8A8A93)
+    val inactiveColor = SportsColors.inactiveText
 
     Scaffold(
         bottomBar = {

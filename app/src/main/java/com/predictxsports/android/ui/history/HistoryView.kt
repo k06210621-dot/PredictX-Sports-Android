@@ -561,7 +561,7 @@ private fun HistoricalMatchCardView(match: Match, index: Int = 0) {
 private fun AiBadge(isHit: Boolean?) {
     when (isHit) {
         true -> {
-            val brush = Brush.linearGradient(listOf(Color(0xFF0EA95F), Color(0xFF16A34A)))
+            val brush = Brush.linearGradient(listOf(SportsColors.gradientWinStart, SportsColors.gradientWinEnd))
             AiPill(
                 text = "AI 分析準確",
                 icon = Icons.Filled.CheckCircle,
@@ -571,7 +571,7 @@ private fun AiBadge(isHit: Boolean?) {
             )
         }
         false -> {
-            val brush = Brush.linearGradient(listOf(Color(0xFFDC2626), Color(0xFFEF4444)))
+            val brush = Brush.linearGradient(listOf(SportsColors.gradientLossStart, SportsColors.gradientLossEnd))
             AiPill(
                 text = "AI 分析未中",
                 icon = Icons.Filled.Close,

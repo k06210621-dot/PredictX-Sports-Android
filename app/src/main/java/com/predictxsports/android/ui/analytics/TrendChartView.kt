@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.predictxsports.android.ui.theme.PredictXTextSize
+import com.predictxsports.android.ui.theme.SportsColors
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -90,8 +91,8 @@ fun TrendChartView(
 @Composable
 private fun TrendLineChart(trends: List<WinRateTrend>) {
     // 亮色系：鮮豔亮藍（深色背景上更醒目），對應 iOS Color.blue.gradient
-    val lineColor = Color(0xFF00A8FF)
-    val pointFillColor = Color(0xFF00A8FF)
+    val lineColor = SportsColors.chartLine
+    val pointFillColor = SportsColors.chartLine
     val pointStrokeColor = Color.White
     val gridColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
 

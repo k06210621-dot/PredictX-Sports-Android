@@ -176,11 +176,11 @@ private fun LockedAnalyticsContent(onUpgradeClick: (() -> Unit)?) {
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                Brush.verticalGradient(listOf(Color(0xFF1A1A25), Color(0xFF252538))),
+                Brush.verticalGradient(listOf(SportsColors.cardBgDeep, SportsColors.cardBgDeepAlt)),
                 RoundedCornerShape(16.dp)
             )
             .border(
-                BorderStroke(1.dp, Color(0xFF3A3A4D)),
+                BorderStroke(1.dp, SportsColors.borderSubtle),
                 RoundedCornerShape(16.dp)
             )
             .padding(24.dp),
@@ -191,7 +191,7 @@ private fun LockedAnalyticsContent(onUpgradeClick: (() -> Unit)?) {
             modifier = Modifier
                 .size(64.dp)
                 .background(
-                    Brush.linearGradient(listOf(Color(0xFF7C3AED), Color(0xFFA78BFA))),
+                    Brush.linearGradient(listOf(SportsColors.premiumGradientStart, SportsColors.premiumGradientEnd)),
                     CircleShape
                 ),
             contentAlignment = Alignment.Center
@@ -210,7 +210,7 @@ private fun LockedAnalyticsContent(onUpgradeClick: (() -> Unit)?) {
         Text(
             "10 場完整紀錄 · 聯賽分佈 · 命中率趨勢圖",
             fontSize = PredictXTextSize.md,
-            color = Color(0xFFD1D5DB)
+            color = SportsColors.textLight
         )
         Spacer(Modifier.height(18.dp))
 
@@ -218,7 +218,7 @@ private fun LockedAnalyticsContent(onUpgradeClick: (() -> Unit)?) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFF000000).copy(alpha = 0.3f), RoundedCornerShape(12.dp))
+                .background(Color.Black.copy(alpha = 0.3f), RoundedCornerShape(12.dp))
                 .padding(14.dp)
         ) {
             Row(
@@ -226,7 +226,7 @@ private fun LockedAnalyticsContent(onUpgradeClick: (() -> Unit)?) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("✓ Standard 月訂", color = Color(0xFF10B981), fontWeight = FontWeight.SemiBold, fontSize = PredictXTextSize.md)
+                Text("✓ Standard 月訂", color = SportsColors.successGreen, fontWeight = FontWeight.SemiBold, fontSize = PredictXTextSize.md)
                 Text("NT$290", color = Color.White, fontWeight = FontWeight.Bold, fontSize = PredictXTextSize.md)
             }
             Spacer(Modifier.height(6.dp))
@@ -234,16 +234,16 @@ private fun LockedAnalyticsContent(onUpgradeClick: (() -> Unit)?) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("　└ 無限 AI 分析點數", color = Color(0xFF9CA3AF), fontSize = PredictXTextSize.sm)
-                Text("包含", color = Color(0xFF6EE7B7), fontSize = PredictXTextSize.sm)
+                Text("　└ 無限 AI 分析點數", color = SportsColors.textMuted, fontSize = PredictXTextSize.sm)
+                Text("包含", color = SportsColors.textLightGreen, fontSize = PredictXTextSize.sm)
             }
             Spacer(Modifier.height(4.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("　└ 完整模型驗證報告", color = Color(0xFF9CA3AF), fontSize = PredictXTextSize.sm)
-                Text("包含", color = Color(0xFF6EE7B7), fontSize = PredictXTextSize.sm)
+                Text("　└ 完整模型驗證報告", color = SportsColors.textMuted, fontSize = PredictXTextSize.sm)
+                Text("包含", color = SportsColors.textLightGreen, fontSize = PredictXTextSize.sm)
             }
         }
         Spacer(Modifier.height(16.dp))
@@ -253,7 +253,7 @@ private fun LockedAnalyticsContent(onUpgradeClick: (() -> Unit)?) {
             onClick = { onUpgradeClick?.invoke() },
             modifier = Modifier.fillMaxWidth(),
             colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF3B82F6)
+                containerColor = SportsColors.actionBlue
             ),
             shape = RoundedCornerShape(12.dp)
         ) {

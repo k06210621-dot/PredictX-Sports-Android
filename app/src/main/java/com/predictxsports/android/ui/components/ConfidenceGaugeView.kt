@@ -122,7 +122,7 @@ fun ConfidenceGaugeView(
                         colors = listOf(
                             SportsColors.dangerRed,    // 紅
                             SportsColors.warningOrange, // 橙
-                            Color(0xFFE8C53B),          // 黃（暫無對應 token）
+                            SportsColors.confidenceMid, // 黃
                             SportsColors.successGreen   // 綠
                         ),
                         center = Offset(centerX, centerY)

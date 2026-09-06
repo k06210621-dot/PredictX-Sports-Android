@@ -69,6 +69,37 @@ object SportsColors {
     val warningOrange   = Color(0xFFE8923B)   // 警告／橘 — 最佳優惠、標籤、通知
     val dangerRed       = Color(0xFFD93B3B)   // 未命中／錯誤／敗 北
     val cyanHighlight   = Color(0xFF00E5FF)   // Cyan 高亮 — 記憶卡、藍色標籤框
+
+    // ── 灰階/中性色（P0-1 補齊） ──
+    val textLight       = Color(0xFFD1D5DB)   // 內文淺灰（高對比文字）
+    val textMuted       = Color(0xFF9CA3AF)   // 次要文字（白名單 ✅ 中文標籤）
+    val textLightGreen  = Color(0xFF6EE7B7)   // 淺綠強調（白名單 ✅ / 包含）
+
+    // ── 互動色（P0-1 補齊） ──
+    val actionBlue      = Color(0xFF3B82F6)   // 行動藍（升級按鈕、CTA）
+
+    // ── Tab/導覽色（P0-1 補齊） ──
+    val tabGlowYellow   = Color(0xFFFFC857)   // 分析頁 Tab 發光
+    val tabGlowOrange   = Color(0xFFFFB37C)   // 個人頁 Tab 發光
+    val inactiveText    = Color(0xFF8A8A93)   // 非選中狀態（對齊 iOS .secondaryLabel）
+
+    // ── 圖表色（P0-1 補齊） ──
+    val confidenceMid   = Color(0xFFE8C53B)   // 信心度中段（黃）
+    val chartLine       = Color(0xFF00A8FF)   // 趨勢線淺藍（專屬）
+    val darkBg          = Color(0xFF0F1220)   // 深色背景錨點（用於雷達圖判斷）
+
+    // ── 付費牆專屬背景（P0-1 補齊） ──
+    val cardBgDeep      = Color(0xFF1A1A25)   // 付費牆深底
+    val cardBgDeepAlt   = Color(0xFF252538)   // 付費牆深底（漸層末）
+    val borderSubtle    = Color(0xFF3A3A4D)   // 付費牆細邊框
+    val premiumGradientStart = Color(0xFF7C3AED) // 付費牆鎖頭漸層起（紫）
+    val premiumGradientEnd   = Color(0xFFA78BFA) // 付費牆鎖頭漸層末（淺紫）
+
+    // ── 漸層色（P0-1 補齊） ──
+    val gradientWinStart   = Color(0xFF0EA95F) // 贏漸層起
+    val gradientWinEnd     = Color(0xFF16A34A) // 贏漸層末
+    val gradientLossStart  = Color(0xFFDC2626) // 輸漸層起
+    val gradientLossEnd    = Color(0xFFEF4444) // 輸漸層末
 }
 
 // ── 深色運動背景 (iOS SportsDarkBackground) ──

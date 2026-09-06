@@ -264,13 +264,14 @@ fun CompactPredictionRowView(
                 .then(if (onCardClick != null && !isLocked) Modifier.clickable { onCardClick() } else Modifier),
             verticalArrangement = Arrangement.spacedBy(1.dp)
         ) {
+            // Row 1: 英文隊名（主）— 對齊 iOS FocusMatchCardView：headline 粗體
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    match.homeTeamCN,
+                    match.homeTeam,
                     fontSize = PredictXTextSize.base,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -285,7 +286,7 @@ fun CompactPredictionRowView(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    match.awayTeamCN,
+                    match.awayTeam,
                     fontSize = PredictXTextSize.base,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -295,16 +296,17 @@ fun CompactPredictionRowView(
                     textAlign = androidx.compose.ui.text.style.TextAlign.End
                 )
             }
+            // Row 2: 中文隊名（輔）— 對齊 iOS：caption 次要色
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(3.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    match.homeTeam,
+                    match.homeTeamCN,
                     fontSize = PredictXTextSize.sm,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 2,
+                    maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
                 )
@@ -314,10 +316,10 @@ fun CompactPredictionRowView(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    match.awayTeam,
+                    match.awayTeamCN,
                     fontSize = PredictXTextSize.sm,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 2,
+                    maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f),
                     textAlign = androidx.compose.ui.text.style.TextAlign.End
