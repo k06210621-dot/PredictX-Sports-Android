@@ -264,7 +264,7 @@ fun CompactPredictionRowView(
                 .then(if (onCardClick != null && !isLocked) Modifier.clickable { onCardClick() } else Modifier),
             verticalArrangement = Arrangement.spacedBy(1.dp)
         ) {
-            // Row 1: 英文隊名（主）— 對齊 iOS FocusMatchCardView：headline 粗體
+            // Row 1: 英文隊名（主）— 對齊 iOS FocusMatchCardView：lineLimit(1) 粗體
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -275,7 +275,7 @@ fun CompactPredictionRowView(
                     fontSize = PredictXTextSize.base,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 2,
+                    maxLines = 1,
                     overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
                 )
@@ -290,7 +290,7 @@ fun CompactPredictionRowView(
                     fontSize = PredictXTextSize.base,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 2,
+                    maxLines = 1,
                     overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f),
                     textAlign = androidx.compose.ui.text.style.TextAlign.End
