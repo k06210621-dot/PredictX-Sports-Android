@@ -171,40 +171,44 @@ private fun TeamsRow(match: Match, onClick: (() -> Unit)? = null) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = match.homeTeam,
-                fontSize = PredictXTextSize.xxl,
+                fontSize = PredictXTextSize.xl,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 1
+                maxLines = 2,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
             Text(
                 text = match.homeTeamCN,
-                fontSize = PredictXTextSize.base,
+                fontSize = PredictXTextSize.sm,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1
+                maxLines = 1,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
         }
 
         Text(
             text = "VS",
-            fontSize = PredictXTextSize.xxl,
+            fontSize = PredictXTextSize.xl,
             fontWeight = FontWeight.Black,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(horizontal = 12.dp)
+            modifier = Modifier.padding(horizontal = 8.dp)
         )
 
         Column(horizontalAlignment = Alignment.End, modifier = Modifier.weight(1f)) {
             Text(
                 text = match.awayTeam,
-                fontSize = PredictXTextSize.xxl,
+                fontSize = PredictXTextSize.xl,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 1
+                maxLines = 2,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
             Text(
                 text = match.awayTeamCN,
-                fontSize = PredictXTextSize.base,
+                fontSize = PredictXTextSize.sm,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1
+                maxLines = 1,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
         }
     }
@@ -262,19 +266,62 @@ fun CompactPredictionRowView(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(5.dp)
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text(match.homeTeamCN, fontSize = PredictXTextSize.base, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface, maxLines = 1)
-                Text("VS", fontSize = PredictXTextSize.base, fontWeight = FontWeight.Black, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text(match.awayTeamCN, fontSize = PredictXTextSize.base, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface, maxLines = 1)
+                Text(
+                    match.homeTeamCN,
+                    fontSize = PredictXTextSize.base,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 2,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    "VS",
+                    fontSize = PredictXTextSize.sm,
+                    fontWeight = FontWeight.Black,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    match.awayTeamCN,
+                    fontSize = PredictXTextSize.base,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 2,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f),
+                    textAlign = androidx.compose.ui.text.style.TextAlign.End
+                )
             }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                horizontalArrangement = Arrangement.spacedBy(3.dp),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text(match.homeTeam, fontSize = PredictXTextSize.sm, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Text("vs", fontSize = PredictXTextSize.sm, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text(match.awayTeam, fontSize = PredictXTextSize.sm, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(
+                    match.homeTeam,
+                    fontSize = PredictXTextSize.sm,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    "vs",
+                    fontSize = PredictXTextSize.sm,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    match.awayTeam,
+                    fontSize = PredictXTextSize.sm,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f),
+                    textAlign = androidx.compose.ui.text.style.TextAlign.End
+                )
             }
         }
 
