@@ -275,7 +275,7 @@ fun CompactPredictionRowView(
                     fontSize = PredictXTextSize.base,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
                 )
@@ -290,7 +290,7 @@ fun CompactPredictionRowView(
                     fontSize = PredictXTextSize.base,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f),
                     textAlign = androidx.compose.ui.text.style.TextAlign.End
@@ -306,7 +306,7 @@ fun CompactPredictionRowView(
                     match.homeTeamCN,
                     fontSize = PredictXTextSize.sm,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
                 )
@@ -319,7 +319,7 @@ fun CompactPredictionRowView(
                     match.awayTeamCN,
                     fontSize = PredictXTextSize.sm,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f),
                     textAlign = androidx.compose.ui.text.style.TextAlign.End
