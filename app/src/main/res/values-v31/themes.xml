@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- P0-4 (2026-09-06)：Android 12+ 系統 splash 背景色保留；
+         移除 statusBarColor/navigationBarColor（Android 15 淘汰）與 windowFullscreen。 -->
     <style name="Theme.PredictX" parent="android:Theme.Material.Light.NoActionBar">
-        <!-- P0-3：Android 12+ 系統 splash 自訂圖示，避免顯示預設 Android 圖示 -->
         <item name="android:windowSplashScreenBackground">@color/splash_background</item>
-    </style>
-
-    <style name="Theme.PredictX.Splash" parent="Theme.PredictX">
-        <item name="android:windowBackground">@color/splash_background</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
-    </style>
-
-    <style name="Theme.PredictX.Launcher" parent="Theme.PredictX">
-        <item name="android:windowBackground">@color/splash_background</item>
-        <item name="android:statusBarColor">@color/splash_background</item>
-        <item name="android:navigationBarColor">@color/splash_background</item>
-        <item name="android:windowNoTitle">true</item>
     </style>
 </resources>

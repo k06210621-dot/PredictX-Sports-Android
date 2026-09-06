@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- P0-4 (2026-09-06)：移除 statusBarColor/navigationBarColor/windowFullscreen 等已淘汰的
+         無邊框參數（Android 15+ targetSdk 35 會觸發 Play Console 警告）。
+         Edge-to-edge 行為改由 MainActivity 的 enableEdgeToEdge() 統一處理。 -->
     <style name="Theme.PredictX" parent="android:Theme.Material.Light.NoActionBar" />
-    <style name="Theme.PredictX.Splash" parent="Theme.PredictX">
-        <item name="android:windowBackground">@drawable/splash_background</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
-    </style>
-    <style name="Theme.PredictX.Launcher" parent="Theme.PredictX">
-        <item name="android:windowBackground">@drawable/splash_background</item>
-        <item name="android:statusBarColor">@color/splash_background</item>
-        <item name="android:navigationBarColor">@color/splash_background</item>
-        <item name="android:windowNoTitle">true</item>
-    </style>
 </resources>
