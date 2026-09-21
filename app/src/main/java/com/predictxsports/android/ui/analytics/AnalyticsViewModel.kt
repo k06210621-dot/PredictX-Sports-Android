@@ -33,6 +33,13 @@ class AnalyticsViewModel : ViewModel() {
     private val _recentSettlements = MutableStateFlow<List<RecentSettlement>>(emptyList())
     val recentSettlements: StateFlow<List<RecentSettlement>> = _recentSettlements
 
+    // 🆕 近一週重點觀察賽事（conf≥8.0）驗證成功率（與 iOS AnalyticsStore.swift 對齊）
+    private val _weeklyFocusAccuracy = MutableStateFlow(0.0)
+    val weeklyFocusAccuracy: StateFlow<Double> = _weeklyFocusAccuracy
+
+    private val _weeklyFocusSettled = MutableStateFlow(0)
+    val weeklyFocusSettled: StateFlow<Int> = _weeklyFocusSettled
+
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
@@ -84,6 +91,9 @@ class AnalyticsViewModel : ViewModel() {
 
             // 並行抓所有聯盟近 30 天 settlement（背景跑，不擋趨勢圖）
             loadRecentSettlements()
+
+            // 🆕 近一週重點觀察賽事（conf≥8.0）驗證成功率（背景跑，不擋趨勢圖）
+            loadWeeklyFocusStats()
 
             _isLoading.value = false
         } catch (e: Exception) {
@@ -162,6 +172,42 @@ class AnalyticsViewModel : ViewModel() {
             val hits = list.count { it.isHit }
             return hits.toDouble() / list.size
         }
+
+    /**
+     * 🆕 並行抓所有聯盟近 7 天賽事，篩選 confidence >= 8.0 且已結算（aiIsHit 非 null），
+     * 計算驗證成功率。
+     * 對應 iOS loadWeeklyFocusStats() + withTaskGroup
+     */
+    private fun loadWeeklyFocusStats() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val deferredResults = LeagueType.activeCases.map { lg ->
+                    viewModelScope.async(Dispatchers.IO) {
+                        try {
+                            val models = RetrofitClient.api.fetchGames(lg.rawValue, days = 7)
+                            models.mapNotNull { m ->
+                                val conf = m.aiConfidence ?: return@mapNotNull null
+                                if (conf < 8.0) return@mapNotNull null
+                                val isHit = m.aiIsHit ?: return@mapNotNull null
+                                isHit
+                            }
+                        } catch (_: Exception) {
+                            emptyList()
+                        }
+                    }
+                }
+
+                val allHits = deferredResults.awaitAll().flatten()
+                val settled = allHits.size
+                val hits = allHits.count { it }
+
+                _weeklyFocusSettled.value = settled
+                _weeklyFocusAccuracy.value = if (settled > 0) hits.toDouble() / settled else 0.0
+            } catch (e: Exception) {
+                // silent
+            }
+        }
+    }
 
     /** 依 gameId 查詢單筆 settlement（供 SettlementDetailView 使用） */
     fun findSettlement(gameId: String): RecentSettlement? =

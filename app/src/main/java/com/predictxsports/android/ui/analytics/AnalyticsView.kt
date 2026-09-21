@@ -72,6 +72,9 @@ fun AnalyticsView(
     val winRateTrends by viewModel.winRateTrends.collectAsState()
     val selectedLeague by viewModel.selectedLeague.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
+    // 🆕 近一週重點觀察賽事驗證率（與 iOS AnalyticsView 對齊）
+    val weeklyFocusAccuracy by viewModel.weeklyFocusAccuracy.collectAsState()
+    val weeklyFocusSettled by viewModel.weeklyFocusSettled.collectAsState()
 
     Column(
         modifier = Modifier
@@ -97,7 +100,16 @@ fun AnalyticsView(
                 contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
-                // 1. 綜合驗證率卡片
+                // 🆕 1. 近一週重點觀察賽事驗證卡片（常開：free/basic/standard/premium 皆可見）
+                //    與 iOS WeeklyFocusAccuracyCard 對齊——位置在 OverallAccuracyCard 上方
+                item {
+                    WeeklyFocusAccuracyCard(
+                        accuracy = weeklyFocusAccuracy,
+                        settledCount = weeklyFocusSettled
+                    )
+                }
+
+                // 2. 綜合驗證率卡片
                 item {
                     OverallAccuracyCard(accuracy = overallAccuracy)
                 }
@@ -129,6 +141,76 @@ fun AnalyticsView(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun WeeklyFocusAccuracyCard(accuracy: Double, settledCount: Int) {
+    // 對應 iOS WeeklyFocusAccuracyCard（cb17bf5）：橙色標題 + 大字體驗證率 + 副標題
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "近一週 AI 重點觀察賽事驗證率",
+                    fontSize = PredictXTextSize.sm,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFFFF8A00)  // 橙色（與 iOS flame 圖標同色系）
+                )
+                Spacer(Modifier.weight(1f))
+                Text(
+                    "信心度 ≥ 8.0 賽事",
+                    fontSize = PredictXTextSize.xs,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Spacer(Modifier.height(8.dp))
+            Row(verticalAlignment = Alignment.Bottom) {
+                if (settledCount > 0) {
+                    Text(
+                        "%.1f%%".format(accuracy * 100),
+                        fontSize = PredictXTextSize.heroLg,
+                        fontWeight = FontWeight.Black,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        "驗證率",
+                        fontSize = PredictXTextSize.base,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(bottom = 6.dp)
+                    )
+                } else {
+                    Text(
+                        "—",
+                        fontSize = PredictXTextSize.heroLg,
+                        fontWeight = FontWeight.Black,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        "暫無結算資料",
+                        fontSize = PredictXTextSize.base,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(bottom = 6.dp)
+                    )
+                }
+            }
+            Text(
+                if (settledCount > 0)
+                    "抓取數據：近一週（7 天）信心度 ≥ 8.0 且已結算的賽事共 $settledCount 場"
+                else
+                    "抓取數據：近一週（7 天）暫無信心度 ≥ 8.0 且已結算的賽事",
+                fontSize = 10.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
