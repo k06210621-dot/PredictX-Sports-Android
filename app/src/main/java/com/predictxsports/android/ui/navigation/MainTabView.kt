@@ -151,7 +151,7 @@ fun MainTabView(billingViewModel: BillingViewModel? = null) {
                         Text(
                             screen.label,
                             color = contentColor,
-                            fontSize = PredictXTextSize.xs,              // 🆕 P0：11.sp（從 13.sp 縮小，解決「AI 模型驗證」被擠成兩行）
+                            fontSize = PredictXTextSize.tabLabel,         // 🆕 Tab 字級：13.sp（+18% 接近你要的 +20%，靠 maxLines=1 強制單行）
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                             maxLines = 1,                                // 🆕 P0：強制單行
                             softWrap = false,                            // 🆕 P0：不自動換行

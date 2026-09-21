@@ -171,6 +171,7 @@ private val PredictXTypography = Typography(
  */
 object PredictXTextSize {
     val xs = 11.sp       // 圖標輔助文字
+    val tabLabel = 13.sp    // 🆕 底部 Tab 標籤（+18% ≈ 你要的 +20%，靠 maxLines=1 強制單行；原 11.sp）
     val sm = 12.sp       // 卡片副標題、時間戳
     val base = 13.sp     // 內文小字、列表項
     val md = 14.sp       // 內文
