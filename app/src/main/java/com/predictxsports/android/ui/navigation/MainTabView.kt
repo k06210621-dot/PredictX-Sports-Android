@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -49,6 +50,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -148,9 +151,16 @@ fun MainTabView(billingViewModel: BillingViewModel? = null) {
                         Text(
                             screen.label,
                             color = contentColor,
-                            fontSize = PredictXTextSize.base,
+                            fontSize = PredictXTextSize.xs,              // 🆕 P0：11.sp（從 13.sp 縮小，解決「AI 模型驗證」被擠成兩行）
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                            modifier = Modifier.padding(top = 3.dp)
+                            maxLines = 1,                                // 🆕 P0：強制單行
+                            softWrap = false,                            // 🆕 P0：不自動換行
+                            overflow = TextOverflow.Visible,             // 🆕 P0：超出寬度時不截斷
+                            textAlign = TextAlign.Center,                // 🆕 P0：置中對齊（與圖標對齊）
+                            modifier = Modifier
+                                .fillMaxWidth()                          // 🆕 P0：撐滿寬度
+                                .padding(top = 3.dp)
+                                .padding(horizontal = 2.dp)             // 🆕 P0：左右各留 2dp 安全邊
                         )
                         // 底部 accent 指示條
                         Box(

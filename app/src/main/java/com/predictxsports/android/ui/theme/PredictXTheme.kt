@@ -54,9 +54,9 @@ object SportsColors {
     val glassBackground @Composable get() = if (isSystemInDarkTheme()) Color(0x26FFFFFF) else Color(0x1A000000)
     val glassBorder @Composable get() = if (isSystemInDarkTheme()) Color(0x3DFFFFFF) else Color(0x33000000)
 
-    val primaryText @Composable get() = MaterialTheme.colorScheme.onSurface
-    val secondaryText @Composable get() = MaterialTheme.colorScheme.onSurfaceVariant
-    val tertiaryText @Composable get() = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
+    val primaryText @Composable get() = MaterialTheme.colorScheme.onSurface                // 🆕 P1：#E8EAED 柔和白（取代 F2F2F7）
+    val secondaryText @Composable get() = MaterialTheme.colorScheme.onSurfaceVariant        // 🆕 P1：#B8BCC4 柔和次要文字
+    val tertiaryText @Composable get() = Color(0xFF8B8F98)                                   // 🆕 P1：#8B8F98 暖灰偏藍（柔和三級文字）
 
     // ── 品牌色（P0-3 顏色 token 化） ──
     val brandPrimary    = Color(0xFF0F4C81)   // 主藍 — 標題、圖示、Focus 框架
@@ -81,7 +81,7 @@ object SportsColors {
     // ── Tab/導覽色（P0-1 補齊） ──
     val tabGlowYellow   = Color(0xFFFFC857)   // 分析頁 Tab 發光
     val tabGlowOrange   = Color(0xFFFFB37C)   // 個人頁 Tab 發光
-    val inactiveText    = Color(0xFF8A8A93)   // 非選中狀態（對齊 iOS .secondaryLabel）
+    val inactiveText    = Color(0xFF9098A1)   // 🆕 P1：#9098A1 暖灰偏藍（取代 #8A8A93 冷藍紫）
 
     // ── 圖表色（P0-1 補齊） ──
     val confidenceMid   = Color(0xFFE8C53B)   // 信心度中段（黃）
@@ -127,8 +127,9 @@ private val DarkColors = darkColorScheme(
     surface = Color(0xFF1C1C1E),
     onPrimary = Color.White,
     onSecondary = Color.White,
-    onBackground = Color(0xFFF2F2F7),
-    onSurface = Color(0xFFF2F2F7)
+    onBackground = Color(0xFFE8EAED),                       // 🆕 P1 柔和主文字（替代 F2F2F7 純白）
+    onSurface = Color(0xFFE8EAED),                          // 🆕 P1 柔和主文字（替代 F2F2F7 純白）
+    onSurfaceVariant = Color(0xFFB8BCC4)                    // 🆕 P1 柔和次要文字（替代 F2F2F7 onSurface 重複問題）
 )
 
 private val LightColors = lightColorScheme(
