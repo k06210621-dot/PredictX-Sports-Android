@@ -541,8 +541,8 @@ private fun SectionHeader(
         Text(
             text = title,
             fontSize = PredictXTextSize.xxl,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
+            fontWeight = FontWeight.Black,  // 🐛 修正：Bold→Black（標題更醒目，避免細體視覺上消失）
+            color = SportsColors.primaryText  // 🐛 修正：onSurface → primaryText（明確 token，避免主題切換時序導致文字與背景同色）
         )
     }
 }

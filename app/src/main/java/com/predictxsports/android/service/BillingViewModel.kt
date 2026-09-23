@@ -217,10 +217,28 @@ class BillingViewModel : ViewModel() {
                 loadFromPrefs()
             }
             setupBillingClient(context)
+            // 🐛 B2 修正：訂閱 BillingManager.isReady StateFlow，解決競態——
+            // 原本 `if (client.isReady)` 是同步快照，若 BillingManager 的 onBillingSetupFinished
+            // callback 尚未跑完（極常見），就會錯過首次 queryProducts + queryExistingPurchases，
+            // 導致「訂閱後立即重開 App」漏掉既有訂閱恢復。
+            observeBillingReady()
         } else {
             // Already initialized (e.g. activity recreate)
             if (_trialStartDate.value == null && _tier.value == MembershipTier.FREE) startTrial()
             checkDailyReset()
+        }
+    }
+
+    /** 🐛 B2 修正：訂閱 BillingManager.isReady 變化，ready=true 時自動 query */
+    private fun observeBillingReady() {
+        viewModelScope.launch {
+            BillingManager.isReady.collect { ready ->
+                if (ready && _productDetails.value.isEmpty()) {
+                    // 只在還沒查過時執行，避免重複查詢
+                    queryProducts()
+                    queryExistingPurchases()
+                }
+            }
         }
     }
 

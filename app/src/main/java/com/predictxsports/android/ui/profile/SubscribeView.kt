@@ -159,6 +159,19 @@ fun SubscribeView(
                 ProductTier.STANDARD -> if (isAnnual) "predictx_standard_yearly" else "predictx_standard_monthly"
                 ProductTier.FREE -> ""
             }
+            // 🐛 B1 修正：訂閱 BillingManager.isReady StateFlow，狀態變化時自動重組（之前讀 .value 是靜態快照）
+            val billingReady by BillingManager.isReady.collectAsState()
+            // 🐛 B1 修正：Billing 未就緒時，給使用者明確提示，避免誤以為按鈕壞了
+            if (!billingReady) {
+                Text(
+                    "訂閱服務初始化中，請稍候數秒…",
+                    fontSize = PredictXTextSize.sm,
+                    color = SportsColors.warningOrange,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(8.dp))
+            }
             androidx.compose.material3.Button(
                 onClick = {
                     // 觸發 Google Play Billing 購買流程
@@ -167,7 +180,7 @@ fun SubscribeView(
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = !isProcessing && BillingManager.isReady.value,
+                enabled = !isProcessing && billingReady,  // 🐛 B1：用 StateFlow 訂閱後的值
                 shape = RoundedCornerShape(50),
                 colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = SportsColors.brandPrimary)
             ) {

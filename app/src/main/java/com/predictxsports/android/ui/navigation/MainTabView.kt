@@ -151,16 +151,16 @@ fun MainTabView(billingViewModel: BillingViewModel? = null) {
                         Text(
                             screen.label,
                             color = contentColor,
-                            fontSize = PredictXTextSize.tabLabel,         // 🆕 Tab 字級：13.sp（+18% 接近你要的 +20%，靠 maxLines=1 強制單行）
+                            fontSize = PredictXTextSize.tabLabel,         // Tab 字級：13.sp
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                            maxLines = 1,                                // 🆕 P0：強制單行
-                            softWrap = false,                            // 🆕 P0：不自動換行
-                            overflow = TextOverflow.Visible,             // 🆕 P0：超出寬度時不截斷
-                            textAlign = TextAlign.Center,                // 🆕 P0：置中對齊（與圖標對齊）
+                            maxLines = 1,                                // 強制單行
+                            softWrap = false,                            // 不自動換行（避免兩行擠壓底部空間）
+                            overflow = TextOverflow.Ellipsis,            // 🐛 修正：原本 Visible 導致「AI 模型驗證」等長字串被父容器切掉看起來像消失
+                            textAlign = TextAlign.Center,                // 置中對齊（與圖標對齊）
                             modifier = Modifier
-                                .fillMaxWidth()                          // 🆕 P0：撐滿寬度
+                                .fillMaxWidth()                          // 撐滿寬度
                                 .padding(top = 3.dp)
-                                .padding(horizontal = 2.dp)             // 🆕 P0：左右各留 2dp 安全邊
+                                .padding(horizontal = 2.dp)             // 左右各留 2dp 安全邊
                         )
                         // 底部 accent 指示條
                         Box(
