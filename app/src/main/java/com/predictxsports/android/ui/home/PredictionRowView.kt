@@ -217,150 +217,153 @@ private fun TeamsRow(match: Match, onClick: (() -> Unit)? = null) {
 @Composable
 fun CompactPredictionRowView(
     match: Match,
-    isFavorited: Boolean = false,
-    canFavorite: Boolean = false,
-    isLocked: Boolean = true,
-    onFavoriteToggle: (() -> Unit)? = null,
-    onUnlockTapped: (() -> Unit)? = null,
     onCardClick: (() -> Unit)? = null,
-    costHint: Int = 0,
     modifier: Modifier = Modifier
 ) {
     val themeColor = LeagueTheme.color(match.league)
+    val dateFmt = SimpleDateFormat("MM/dd", Locale.TAIWAN)
 
-    Row(
+    // 🎨 強化美工：信心度分級色（≥8 橘金熱門、6-8 品牌藍、<6 中性灰藍）
+    val conf = match.aiConfidence ?: 0.0
+    val confColor = when {
+        conf >= 8.0 -> SportsColors.brandTertiary
+        conf >= 6.0 -> SportsColors.brandPrimary
+        else -> SportsColors.inactiveText
+    }
+
+    Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(2.dp)
-            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
+            .background(
+                // 🎨 強化美工：頂部主題色暈染 → 底部純 surface 的柔和漸層底
+                Brush.verticalGradient(
+                    colors = listOf(
+                        themeColor.copy(alpha = 0.14f),
+                        MaterialTheme.colorScheme.surface
+                    )
+                ),
+                RoundedCornerShape(18.dp)
+            )
             .border(
                 width = 1.dp,
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        themeColor.copy(alpha = 0.5f),
-                        themeColor.copy(alpha = 0.15f)
+                        themeColor.copy(alpha = 0.65f),
+                        themeColor.copy(alpha = 0.18f)
                     )
                 ),
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(18.dp)
             )
-            .padding(12.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .then(if (onCardClick != null) Modifier.clickable { onCardClick() } else Modifier)
+            .padding(horizontal = 12.dp, vertical = 11.dp),
+        verticalArrangement = Arrangement.spacedBy(7.dp)
     ) {
-        // Left: league + date + confidence
-        Column(
-            verticalArrangement = Arrangement.spacedBy(2.dp),
-            modifier = Modifier.widthIn(min = 72.dp)
+        // ── Row 1: 聯盟徽章 + 日期 + 信心度徽章（信心度依分級變色）──
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(match.league.rawValue, fontSize = PredictXTextSize.sm, fontWeight = FontWeight.Bold, color = themeColor)
-            val dateFmt = SimpleDateFormat("MM/dd", Locale.TAIWAN)
-            Text(dateFmt.format(Date(match.startTime)), fontSize = PredictXTextSize.sm, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text("%.1f/10".format(match.aiConfidence ?: 0.0), fontSize = PredictXTextSize.sm, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+            Text(
+                match.league.rawValue,
+                fontSize = PredictXTextSize.sm,
+                fontWeight = FontWeight.ExtraBold,
+                color = Color.White,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(
+                        Brush.horizontalGradient(
+                            listOf(themeColor, themeColor.copy(alpha = 0.75f))
+                        )
+                    )
+                    .padding(horizontal = 9.dp, vertical = 3.dp)
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                dateFmt.format(Date(match.startTime)),
+                fontSize = PredictXTextSize.sm,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(Modifier.weight(1f))
+            // 信心度徽章：分級色底 + 白字（≥8 橘金＝AI 熱門）
+            Text(
+                "%.1f/10".format(conf),
+                fontSize = PredictXTextSize.sm,
+                fontWeight = FontWeight.ExtraBold,
+                color = Color.White,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(confColor)
+                    .padding(horizontal = 9.dp, vertical = 3.dp)
+            )
         }
 
-        // Center: team names
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .then(if (onCardClick != null && !isLocked) Modifier.clickable { onCardClick() } else Modifier),
-            verticalArrangement = Arrangement.spacedBy(1.dp)
+        // ── Row 2: 英文隊名行（主行）── 主隊左對齊 / VS 置中 / 客隊右對齊
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            modifier = Modifier.fillMaxWidth()
         ) {
-            // Row 1: 英文隊名（主）— 對齊 iOS FocusMatchCardView：lineLimit(1) 粗體
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    match.homeTeam,
-                    fontSize = PredictXTextSize.base,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 2,
-                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
-                )
-                Text(
-                    "VS",
-                    fontSize = PredictXTextSize.sm,
-                    fontWeight = FontWeight.Black,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    match.awayTeam,
-                    fontSize = PredictXTextSize.base,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 2,
-                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f),
-                    textAlign = androidx.compose.ui.text.style.TextAlign.End
-                )
-            }
-            // Row 2: 中文隊名（輔）— 對齊 iOS：caption 次要色
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(3.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    match.homeTeamCN,
-                    fontSize = PredictXTextSize.sm,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
-                )
-                Text(
-                    "vs",
-                    fontSize = PredictXTextSize.sm,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    match.awayTeamCN,
-                    fontSize = PredictXTextSize.sm,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f),
-                    textAlign = androidx.compose.ui.text.style.TextAlign.End
-                )
-            }
+            Text(
+                match.homeTeam,
+                fontSize = PredictXTextSize.base,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 2,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                "VS",
+                fontSize = PredictXTextSize.sm,
+                fontWeight = FontWeight.Black,
+                color = themeColor.copy(alpha = 0.55f)
+            )
+            Text(
+                match.awayTeam,
+                fontSize = PredictXTextSize.base,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 2,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                textAlign = androidx.compose.ui.text.style.TextAlign.End,
+                modifier = Modifier.weight(1f)
+            )
         }
 
-        if (canFavorite || (isLocked && costHint > 0)) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier.padding(start = 8.dp)
-            ) {
-                if (canFavorite) {
-                    IconButton(onClick = { onFavoriteToggle?.invoke() }, modifier = Modifier.size(28.dp)) {
-                        Icon(
-                            imageVector = if (isFavorited) Icons.Filled.Star else Icons.Outlined.StarBorder,
-                            contentDescription = "收藏",
-                            tint = if (isFavorited) SportsColors.brandSecondary else MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
-                }
-                if (isLocked && costHint > 0) {
-                    Box(
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f), RoundedCornerShape(20.dp))
-                            .clickable { onUnlockTapped?.invoke() }
-                            .padding(6.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Lock,
-                            contentDescription = "解鎖",
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
-                }
-            }
+        // ── Row 3: 中文隊名行（輔行，次要色）──
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                match.homeTeamCN,
+                fontSize = PredictXTextSize.sm,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                "vs",
+                fontSize = PredictXTextSize.sm,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+            )
+            Text(
+                match.awayTeamCN,
+                fontSize = PredictXTextSize.sm,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                textAlign = androidx.compose.ui.text.style.TextAlign.End,
+                modifier = Modifier.weight(1f)
+            )
         }
+
+        // ── Row 4 已依產品指示移除：不再顯示收藏星與「解鎖 N 點」按鈕，
+        //     整卡可點擊（已解鎖→進詳情；未解鎖→由 HomeView 跳「同意，扣除 20 點」對話框）──
     }
 }
 

@@ -29,9 +29,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -163,15 +165,48 @@ fun SubscribeView(
             val billingReady by BillingManager.isReady.collectAsState()
             // 🐛 B3：訂閱購買流程錯誤訊息（SKU 缺失 / offerToken 缺失 / Play 錯誤碼）
             val billingError by BillingManager.errorMessage.collectAsState()
-            // 🐛 B1 修正：Billing 未就緒時，給使用者明確提示，避免誤以為按鈕壞了
+            // 🐛 C8-b：追蹤未就緒時長 — 前 30 秒顯示「初始化中」，超過則顯示帳號提示 + 重試鈕
+            var notReadySince by remember { mutableStateOf<Long?>(null) }
+            LaunchedEffect(billingReady) {
+                notReadySince = if (billingReady) null else System.currentTimeMillis()
+            }
+            val now = remember { mutableStateOf(System.currentTimeMillis()) }
+            LaunchedEffect(notReadySince) {
+                if (notReadySince != null) {
+                    while (true) {
+                        kotlinx.coroutines.delay(1_000)
+                        now.value = System.currentTimeMillis()
+                    }
+                }
+            }
+            val showStuck = notReadySince != null && (now.value - (notReadySince ?: 0L)) > 30_000L
             if (!billingReady) {
-                Text(
-                    "訂閱服務初始化中，請稍候數秒…",
-                    fontSize = PredictXTextSize.sm,
-                    color = SportsColors.warningOrange,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                if (showStuck) {
+                    // 🐛 C8-b：卡超過 30 秒 → 明確告知是帳號/服務問題，並提供重試
+                    Text(
+                        "訂閱服務暫時無法連線，請確認裝置已登入 Google 帳號後重試",
+                        fontSize = PredictXTextSize.sm,
+                        color = SportsColors.dangerRed,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    androidx.compose.material3.OutlinedButton(
+                        onClick = { BillingManager.manualRetry() },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(50)
+                    ) {
+                        Text("重新連線訂閱服務", color = SportsColors.brandPrimary, fontWeight = FontWeight.Bold)
+                    }
+                } else {
+                    Text(
+                        "訂閱服務初始化中，請稍候數秒…",
+                        fontSize = PredictXTextSize.sm,
+                        color = SportsColors.warningOrange,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
                 Spacer(Modifier.height(8.dp))
             }
             // 🐛 B3：顯示 Billing 錯誤（紅色），使用者知道「按了沒反應」的原因

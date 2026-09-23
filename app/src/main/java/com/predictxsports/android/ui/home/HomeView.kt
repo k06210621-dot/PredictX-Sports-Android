@@ -287,26 +287,15 @@ fun HomeView(
                                     val isPaid = tier == MembershipTier.STANDARD
                                     CompactPredictionRowView(
                                         match = match,
-                                        isLocked = !isUnlocked && !isPaid,
-                                        costHint = if (!isPaid) 20 else 0,
-                                        isFavorited = favoriteMatchIds.contains(match.id),
-                                        canFavorite = true,
-                                        onFavoriteToggle = { billingViewModel.toggleFavorite(match) },
-                                        onCardClick = if (isUnlocked || isPaid) onMatchClick?.let { {
-                                            // 🆕 [Bug Fix] 對齊 iOS：已解鎖的賽事若 hasAnalysis=false，也跳警示
+                                        // 🆕 整卡可點：已解鎖→跳詳情；未解鎖→跳「同意，扣除 20 點」確認對話框
+                                        onCardClick = {
                                             if (!match.hasAnalysis) {
+                                                // 對齊 iOS：沒有 AI 分析內容的賽事，一律提示不可開啟
                                                 noAnalysisMatch = match
                                                 showNoAnalysisDialog = true
-                                            } else {
+                                            } else if (isUnlocked || isPaid) {
                                                 Log.d("HomeView", "onMatchClick forwarding for ${match.id}")
-                                                it(match)
-                                            }
-                                        } } else null,
-                                        onUnlockTapped = {
-                                            // 🆕 [Bug Fix] 對齊 iOS：沒有 AI 分析內容的賽事，禁止使用點數開啟
-                                            if (!match.hasAnalysis) {
-                                                noAnalysisMatch = match
-                                                showNoAnalysisDialog = true
+                                                onMatchClick?.invoke(match)
                                             } else {
                                                 // 跳出確認彈窗，而非直接扣點
                                                 matchToConfirm = match

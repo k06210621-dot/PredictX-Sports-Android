@@ -66,6 +66,85 @@ object BillingManager {
         _errorMessage.value = null
     }
 
+    // ── C8-a：連線失敗重試狀態 ──
+    // 指數退避：5s → 15s → 30s，最多 3 次；成功後歸零
+    private var retryCount = 0
+    private val retryHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val retryRunnable = Runnable { retryConnect() }
+
+    /** C8-a：連線失敗後的退避重試入口 */
+    private fun scheduleRetry() {
+        if (retryCount >= 3) {
+            Log.w(TAG, "BillingClient 重試 3 次仍失敗，等待 App 重啟或手動重試")
+            return
+        }
+        val delayMs = when (retryCount) {
+            0 -> 5_000L
+            1 -> 15_000L
+            else -> 30_000L
+        }
+        retryCount++
+        Log.d(TAG, "BillingClient 將於 ${delayMs / 1000}s 後重試（第 $retryCount 次）")
+        retryHandler.postDelayed(retryRunnable, delayMs)
+    }
+
+    /** C8-a：手動重試（SubscribeView 重試按鈕呼叫），重置退避計數 */
+    fun manualRetry() {
+        retryHandler.removeCallbacks(retryRunnable)
+        retryCount = 0
+        _errorMessage.value = null
+        reconnect()
+    }
+
+    /** C8-a：手動重試的實際重連入口（區別於 initialize 的防重入保護） */
+    private fun reconnect() {
+        val client = billingClient
+        if (client == null) {
+            Log.w(TAG, "reconnect: billingClient 尚未建立，呼叫 initialize")
+            applicationContext?.let { initialize(it) }
+            return
+        }
+        Log.d(TAG, "reconnect: 手動重試 startConnection")
+        startConnectionInternal(client)
+    }
+
+    /** C8-a：實際重連動作（重用既有 client，不重建） */
+    private fun retryConnect() {
+        val client = billingClient
+        if (client == null) {
+            Log.w(TAG, "retryConnect: billingClient 為 null，中止")
+            return
+        }
+        if (client.isReady) {
+            _isReady.value = true
+            return
+        }
+        Log.d(TAG, "retryConnect: 重新 startConnection（第 $retryCount 次重試）")
+        startConnectionInternal(client)
+    }
+
+    private fun startConnectionInternal(client: BillingClient) {
+        client.startConnection(object : BillingClientStateListener {
+            override fun onBillingSetupFinished(billingResult: BillingResult) {
+                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                    _isReady.value = true
+                    retryCount = 0  // C8-a：成功後重置退避計數
+                    Log.d(TAG, "BillingClient 已就緒")
+                    querySubscriptions()
+                } else {
+                    Log.w(TAG, "BillingClient 連接失敗（第 ${retryCount + 1} 次）: ${billingResult.debugMessage}")
+                    scheduleRetry()  // 🐛 C8-a：指數退避重試
+                }
+            }
+
+            override fun onBillingServiceDisconnected() {
+                Log.w(TAG, "BillingClient 連線中斷")
+                _isReady.value = false
+                scheduleRetry()  // 🐛 C8-a：斷線也走退避重試
+            }
+        })
+    }
+
     /** 包裝後的 SKU 資訊（用於 UI 顯示價格 + 啟動購買） */
     data class SkuInfo(
         val productId: String,
@@ -94,23 +173,8 @@ object BillingManager {
             )
             .build()
 
-        billingClient?.startConnection(object : BillingClientStateListener {
-            override fun onBillingSetupFinished(billingResult: BillingResult) {
-                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                    _isReady.value = true
-                    Log.d(TAG, "BillingClient 已就緒")
-                    querySubscriptions()
-                } else {
-                    Log.w(TAG, "BillingClient 連接失敗: ${billingResult.debugMessage}")
-                }
-            }
-
-            override fun onBillingServiceDisconnected() {
-                Log.w(TAG, "BillingClient 連線中斷，嘗試重連")
-                _isReady.value = false
-                initialize(context)
-            }
-        })
+        // 🐛 C8-a：統一走 startConnectionInternal（含指數退避重試）
+        startConnectionInternal(billingClient!!)
     }
 
     /** 查詢可訂閱 SKU 詳情 (Billing Library 8.0+ 使用 ProductDetails) */
