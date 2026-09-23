@@ -57,6 +57,15 @@ object BillingManager {
     private val _skus = MutableStateFlow<List<SkuInfo>>(emptyList())
     val skus: StateFlow<List<SkuInfo>> = _skus.asStateFlow()
 
+    /** 🐛 B3：購買流程錯誤訊息（UI 訂閱顯示），null = 無錯誤 */
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
+
+    /** 清除錯誤訊息（進入訂閱頁或重試時呼叫） */
+    fun clearError() {
+        _errorMessage.value = null
+    }
+
     /** 包裝後的 SKU 資訊（用於 UI 顯示價格 + 啟動購買） */
     data class SkuInfo(
         val productId: String,
@@ -143,23 +152,27 @@ object BillingManager {
 
     /** 啟動購買流程 — 從 SubscribeView 點擊「訂閱」按鈕時呼叫 */
     fun launchPurchaseFlow(activity: Activity, skuId: String) {
+        _errorMessage.value = null  // 🐛 B3：每次嘗試前清除舊錯誤
         val client = billingClient ?: run {
             Log.w(TAG, "BillingClient 尚未就緒")
+            _errorMessage.value = "訂閱服務尚未連線，請稍候再試"
             return
         }
 
         val skuInfo = _skus.value.firstOrNull { it.productId == skuId }
         if (skuInfo == null) {
             Log.w(TAG, "找不到 SKU: $skuId — 可能 Play Console 尚未建立")
+            _errorMessage.value = "此訂閱方案尚未開通（$skuId），請稍後再試或聯絡開發者"
             return
         }
 
         val offerToken = skuInfo.offerToken
-        val productDetails = skuInfo.productDetails
-        if (offerToken == null || productDetails == null) {
-            Log.w(TAG, "SKU $skuId 缺少 offerToken / productDetails")
+        if (offerToken == null) {
+            Log.w(TAG, "SKU $skuId 缺少 offerToken")
+            _errorMessage.value = "此訂閱方案的定價資訊尚未就緒，請稍後再試"
             return
         }
+        val productDetails = skuInfo.productDetails
 
         val flowParams = BillingFlowParams.newBuilder()
             .setProductDetailsParamsList(
@@ -197,9 +210,20 @@ object BillingManager {
             }
             BillingClient.BillingResponseCode.USER_CANCELED -> {
                 Log.d(TAG, "使用者取消購買")
+                _errorMessage.value = null  // 🐛 B3：取消不算錯誤，清掉舊訊息
             }
             else -> {
                 Log.w(TAG, "購買錯誤: ${billingResult.debugMessage}")
+                // 🐛 B3：把 Play 回傳的錯誤碼轉成使用者可讀訊息
+                _errorMessage.value = when (billingResult.responseCode) {
+                    BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> "您已擁有此訂閱方案"
+                    BillingClient.BillingResponseCode.ITEM_UNAVAILABLE -> "此訂閱方案目前無法購買，請稍後再試"
+                    BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> "您的裝置無法使用 Google Play 付款服務"
+                    BillingClient.BillingResponseCode.DEVELOPER_ERROR -> "發生設定錯誤，請聯絡開發者"
+                    BillingClient.BillingResponseCode.ERROR -> "購買發生錯誤，請稍後再試"
+                    BillingClient.BillingResponseCode.NETWORK_ERROR -> "網路連線失敗，請檢查網路後再試"
+                    else -> "購買失敗（錯誤代碼 ${billingResult.responseCode}），請稍後再試"
+                }
             }
         }
     }

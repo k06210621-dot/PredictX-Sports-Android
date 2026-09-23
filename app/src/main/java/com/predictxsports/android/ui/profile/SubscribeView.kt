@@ -161,12 +161,25 @@ fun SubscribeView(
             }
             // 🐛 B1 修正：訂閱 BillingManager.isReady StateFlow，狀態變化時自動重組（之前讀 .value 是靜態快照）
             val billingReady by BillingManager.isReady.collectAsState()
+            // 🐛 B3：訂閱購買流程錯誤訊息（SKU 缺失 / offerToken 缺失 / Play 錯誤碼）
+            val billingError by BillingManager.errorMessage.collectAsState()
             // 🐛 B1 修正：Billing 未就緒時，給使用者明確提示，避免誤以為按鈕壞了
             if (!billingReady) {
                 Text(
                     "訂閱服務初始化中，請稍候數秒…",
                     fontSize = PredictXTextSize.sm,
                     color = SportsColors.warningOrange,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(8.dp))
+            }
+            // 🐛 B3：顯示 Billing 錯誤（紅色），使用者知道「按了沒反應」的原因
+            billingError?.let { err ->
+                Text(
+                    err,
+                    fontSize = PredictXTextSize.sm,
+                    color = SportsColors.dangerRed,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
