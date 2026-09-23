@@ -220,6 +220,11 @@ private fun AnalysisContent(match: Match, analysis: AIAnalysisModel) {
                     val awayProb = analysis.prediction?.awayWinProbability ?: 0.0
                     val confidence = analysis.prediction?.confidence ?: 0.0
                     val score = analysis.prediction?.predictedScore ?: "N/A"
+                    // 🐛 B1/B3 修復：總和為 0 時（後端 null → 0.0）避免 0/0 = NaN 導致
+                    // fillMaxWidth(NaN) crash，fallback 各 50% 且總和不為 0
+                    val probSum = homeProb + awayProb
+                    val homeFrac = if (probSum > 0.0) (homeProb / probSum).toFloat().coerceIn(0f, 1f) else 0.5f
+                    val awayFrac = if (probSum > 0.0) (awayProb / probSum).toFloat().coerceIn(0f, 1f) else 0.5f
 
                     // 雙向勝率條
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -238,7 +243,7 @@ private fun AnalysisContent(match: Match, analysis: AIAnalysisModel) {
                             ) {
                                 Box(
                                     modifier = Modifier
-                                        .fillMaxWidth((homeProb / (homeProb + awayProb)).toFloat().coerceIn(0f, 1f))
+                                        .fillMaxWidth(homeFrac)
                                         .height(8.dp)
                                         .background(SportsColors.brandPrimary, CircleShape)
                                 )
@@ -260,7 +265,7 @@ private fun AnalysisContent(match: Match, analysis: AIAnalysisModel) {
                             ) {
                                 Box(
                                     modifier = Modifier
-                                        .fillMaxWidth((awayProb / (homeProb + awayProb)).toFloat().coerceIn(0f, 1f))
+                                        .fillMaxWidth(awayFrac)
                                         .height(8.dp)
                                         .background(SportsColors.dangerRed, CircleShape)
                                 )
@@ -285,7 +290,8 @@ private fun AnalysisContent(match: Match, analysis: AIAnalysisModel) {
 
                     // confidence + score
                     Row {
-                        Text("信心度：%.1f".format(confidence), fontSize = PredictXTextSize.xl, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        // 🐛 B4：對齊 iOS label.confidence 顯示（%.1f/10，與列表卡一致）
+                        Text("信心度：%.1f/10".format(confidence), fontSize = PredictXTextSize.xl, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Spacer(Modifier.weight(1f))
                         Text("推演比分：$score", fontSize = PredictXTextSize.xl, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }

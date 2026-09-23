@@ -20,6 +20,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 
 import androidx.compose.foundation.layout.padding
@@ -232,9 +233,14 @@ fun MainTabView(billingViewModel: BillingViewModel? = null) {
                 val matchId = backStackEntry.arguments?.getString("matchId") ?: ""
                 val match = homeViewModel.findMatchById(matchId)
                 if (match != null) {
+                    // 🐛 B2 修復：接上收藏星星（原本簽名有 isFavorited/onToggleFavorite
+                    // 但呼叫端沒傳，詳情頁星星永遠不出現）
+                    val favIds by effectiveBilling.favoriteMatchIds.collectAsState()
                     AIAnalysisDetailView(
                         match = match,
-                        onBack = { navController.popBackStack() }
+                        onBack = { navController.popBackStack() },
+                        isFavorited = favIds.contains(match.id),
+                        onToggleFavorite = { effectiveBilling.toggleFavorite(match) }
                     )
                 } else {
                     LaunchedEffect(Unit) { navController.popBackStack() }
