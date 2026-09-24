@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Android 12+ 資料提取規則（Android Backup/Restore 範圍控制）
+  政策目的：Play Console 上架掃描要求明確宣告 App 在「雲端備份」與「裝置轉移」期間的資料處理方式。
+  本 App allowBackup=false（AndroidManifest.xml），此份規則進一步明確釐清：
+    - 雲端備份：完全排除所有資料（即使是預設目錄），符合 Play Billing 帳款規則（不應將 billing token 備份至雲端）
+    - 裝置轉移：完全排除，防止跨裝置流量重放
+  此設定與 Privacy Policy 一致。詳見 docs/privacy-policy.html。
+-->
+<data-extraction-rules>
+    <!-- 雲端備份（Android 12+）：排除所有 root / file / database / sharedpref / external 域 -->
+    <cloud-backup>
+        <exclude domain="root" />
+        <exclude domain="file" />
+        <exclude domain="database" />
+        <exclude domain="sharedpref" />
+        <exclude domain="external" />
+    </cloud-backup>
+    <!-- 裝置轉移（Android 12+）：同樣排除所有資料 -->
+    <device-transfer>
+        <exclude domain="root" />
+        <exclude domain="file" />
+        <exclude domain="database" />
+        <exclude domain="sharedpref" />
+        <exclude domain="external" />
+    </device-transfer>
+</data-extraction-rules>

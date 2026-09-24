@@ -334,7 +334,8 @@ private fun buildDisclaimerSections(): List<DisclaimerSection> {
             title = "1. 服務性質說明",
             color = Color.Blue,
             paragraphs = listOf(
-                ParagraphItem.TextItem("PredictX Sports 為 AI 運動數據分析平台，提供以下服務："),
+                ParagraphItem.TextItem("PredictX Sports 為 AI 運動數據分析工具，僅供娛樂與數據分析參考，非博弈用途。本應用定位為 18 歲以上運動數據愛好者使用之工具。"),
+                ParagraphItem.TextItem("本應用提供以下服務："),
                 ParagraphItem.BulletItem("運動賽事數據分析", Icons.Filled.BarChart, Color.Blue),
                 ParagraphItem.BulletItem("歷史統計資料查詢", Icons.Filled.History, Color.Blue),
                 ParagraphItem.BulletItem("AI 模型推論結果", Icons.Filled.Info, Color.Blue),
